@@ -1,0 +1,26 @@
+Links:
+OG backgammon google drive: https://drive.google.com/drive/folders/1qcYgxsP49UugdZiQcML_bcppwvRH9ZZQ
+stupid reminder page only i care about: https://stackoverflow.com/questions/419163/what-does-if-name-main-do
+sentiment analysis tutorial/medium page: https://medium.com/@bhadreshpsavani/tutorial-on-sentimental-analysis-using-pytorch-b1431306a2d7
+info on LSTM Networks: https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+lstm metric info: https://datascience.stackexchange.com/questions/44274/metrics-for-presenting-rnn-lstm-result
+pitchfork scraper and dataset: https://github.com/evanm31/p4k-scraper
+wiki: https://en.wikipedia.org/wiki/Long_short-term_memory
+pytorch documentation (specifically saving model): https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-model-for-inference
+
+
+Needs(research):
+more pages on LSTM's 
+info on sentiment analysis
+info on metrics for rnn's, lstm networks, and nn in general
+info on time series
+info on vanishing gradient problem(the motivation for lstm's)
+
+Things we can/should do:
+train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
+-compare performance of both of these on both just p4k and homogenous each
+-possible reasons for difference
+**p4k has different mean or std dev of scores
+**p4k uses a different vocabulary
+thus we can also train on the same data, but standardize the scores:
+-eliminates possibility that p4k has different mean or std dev of scores
