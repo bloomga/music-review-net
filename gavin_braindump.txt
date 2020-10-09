@@ -24,3 +24,7 @@ train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
 **p4k uses a different vocabulary
 thus we can also train on the same data, but standardize the scores:
 -eliminates possibility that p4k has different mean or std dev of scores
+
+
+Assorted to do:
+comment metacritic scraper-(Gavin)
