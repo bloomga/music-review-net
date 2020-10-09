@@ -1,6 +1,6 @@
 Links:
 OG backgammon google drive: https://drive.google.com/drive/folders/1qcYgxsP49UugdZiQcML_bcppwvRH9ZZQ
-stupid reminder page only i care about: https://stackoverflow.com/questions/419163/what-does-if-name-main-do
+getting python imports to work: https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 sentiment analysis tutorial/medium page: https://medium.com/@bhadreshpsavani/tutorial-on-sentimental-analysis-using-pytorch-b1431306a2d7
 info on LSTM Networks: https://colah.github.io/posts/2015-08-Understanding-LSTMs/
 lstm metric info: https://datascience.stackexchange.com/questions/44274/metrics-for-presenting-rnn-lstm-result
@@ -28,3 +28,4 @@ thus we can also train on the same data, but standardize the scores:
 
 Assorted to do:
 comment metacritic scraper-(Gavin)
+produce output file from metacrtitic scraper with same format as p4k dataset file
