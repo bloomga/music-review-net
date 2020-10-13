@@ -27,6 +27,32 @@ because it is a regression problem, we will use be minimizing root mean square e
 -we can graph loss vs over epoch
 -we can also graph val loss over epoch
 
+milestones:
+prep stage
+-get access to lab
+-get metacritic scraper working and produce dataset
+-continuous learnig/research
+
+preprocess stage
+-produce p4k datset version with "best new music reissues" removed
+-preprocess datasets to make the same formatting
+-produce standardized  score versions of the datasets
+-preprocess datsets to prepare for training/testing
+
+coding stage
+-write model
+-debug model
+-optimize model (see if we can push loss lower)
+
+training stage
+-train on p4k dataset best new music reissues removed and best new music reissues kept
+--determine which is better
+-train on non standardized data and analyze results
+-train on standardized data and analyze results
+produce presentation and written project report
+
+
+
 Things we can/should do:
 train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
 -compare performance of both of these on both just p4k and homogenous each
@@ -35,8 +61,14 @@ train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
 **p4k uses a different vocabulary
 -thus we can also train on the same data, but standardize the scores:
 **eliminates possibility that p4k has different mean or std dev of scores
-how many epochs till loss stops decreasing?
 
+things to find/results:
+-differences between p4k model and metacritic model when evaluated on both testing sets
+--possible explanations? (this is conclusion material-i dont know what hard claims we can make)
+-how many epochs till loss stops decreasing?
+
+possible problems:
+-some review sites use a score decided by group of critics, review written by only 1 critic. (needs citation)
 
 Assorted to do:
 comment metacritic scraper-(Gavin)
