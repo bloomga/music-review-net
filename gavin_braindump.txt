@@ -12,6 +12,7 @@ helpful stack exchange page to understand lstms: https://datascience.stackexchan
 pytorch documentation: https://pytorch.org/docs/stable/nn.html#lstm
 val loss/loss: https://stackoverflow.com/questions/36963054/what-is-train-loss-valid-loss-and-train-val-mean-in-nns
 implementing rmse: https://discuss.pytorch.org/t/rmse-loss-function/16540
+optimizing lstm: https://stats.stackexchange.com/questions/351808/lstm-time-series-forecasting-accuracy
 
 Needs(research):
 more pages on LSTM's https://arxiv.org/ftp/arxiv/papers/2005/2005.03993.pdf (LSTM's why they are used for time series/sentiment analysis)
