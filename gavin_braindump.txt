@@ -46,6 +46,7 @@ coding stage
 training stage
 -train on non standardized data and analyze results
 -train on standardized data and analyze results
+--if we compare predictions made from standardized data to non-standardized data we need to inverse_transform the score of the prediction
 
 'stretches':
 -p4k datset version with "best new music reissues" removed?
