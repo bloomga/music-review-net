@@ -29,9 +29,10 @@ because it is a regression problem, we will use be minimizing root mean square e
 -we can graph loss vs over epoch
 -we can also graph val loss over epoch
 -we can graph accuracy over epoch
--scatterplot of actual
+-scatterplot of actual vs predicted
 -max residual (diff between predicted and actual)
 -min residual
+-compare to benchmark of normal distribution predicting values
 
 milestones:
 prep stage
