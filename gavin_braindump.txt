@@ -34,7 +34,6 @@ prep stage
 -continuous learnig/research
 
 preprocess stage
--produce p4k datset version with "best new music reissues" removed
 -preprocess datasets to make the same formatting
 -produce standardized  score versions of the datasets
 -preprocess datsets to prepare for training/testing
@@ -45,10 +44,15 @@ coding stage
 -optimize model (see if we can push loss lower)
 
 training stage
--train on p4k dataset best new music reissues removed and best new music reissues kept
---determine which is better
 -train on non standardized data and analyze results
 -train on standardized data and analyze results
+
+'stretches':
+-p4k datset version with "best new music reissues" removed?
+--train on p4k dataset best new music reissues removed and best new music reissues kept
+---determine which is better
+-including genre/artist data?
+
 produce presentation and written project report
 
 
