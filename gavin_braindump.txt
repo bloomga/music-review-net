@@ -6,15 +6,26 @@ info on LSTM Networks: https://colah.github.io/posts/2015-08-Understanding-LSTMs
 lstm metric info: https://datascience.stackexchange.com/questions/44274/metrics-for-presenting-rnn-lstm-result
 pitchfork scraper and dataset: https://github.com/evanm31/p4k-scraper
 wiki: https://en.wikipedia.org/wiki/Long_short-term_memory
+more lstm: http://deeplearning.net/tutorial/lstm.html
 pytorch documentation (specifically saving model): https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-model-for-inference
-
+helpful stack exchange page to understand lstms: https://datascience.stackexchange.com/questions/66594/activation-function-between-lstm-layers
+pytorch documentation: https://pytorch.org/docs/stable/nn.html#lstm
+val loss/loss: https://stackoverflow.com/questions/36963054/what-is-train-loss-valid-loss-and-train-val-mean-in-nns
+implementing rmse: https://discuss.pytorch.org/t/rmse-loss-function/16540
 
 Needs(research):
-more pages on LSTM's 
+more pages on LSTM's https://arxiv.org/ftp/arxiv/papers/2005/2005.03993.pdf (LSTM's why they are used for time series/sentiment analysis)
 info on sentiment analysis
 info on metrics for rnn's, lstm networks, and nn in general
 info on time series
-info on vanishing gradient problem(the motivation for lstm's)
+info on vanishing gradient problem(the motivation for lstm's): https://medium.com/datadriveninvestor/how-do-lstm-networks-solve-the-problem-of-vanishing-gradients-a6784971a577
+
+metrics:
+root mean square error vs mean square error?: http://zerospectrum.com/2019/06/02/mae-vs-mse-vs-rmse/
+answer: root mean square error
+because it is a regression problem, we will use be minimizing root mean square error: ie the loss function will be mse
+-we can graph loss vs over epoch
+-we can also graph val loss over epoch
 
 Things we can/should do:
 train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
@@ -22,8 +33,9 @@ train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
 -possible reasons for difference
 **p4k has different mean or std dev of scores
 **p4k uses a different vocabulary
-thus we can also train on the same data, but standardize the scores:
--eliminates possibility that p4k has different mean or std dev of scores
+-thus we can also train on the same data, but standardize the scores:
+**eliminates possibility that p4k has different mean or std dev of scores
+how many epochs till loss stops decreasing?
 
 
 Assorted to do:
