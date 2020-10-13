@@ -14,6 +14,7 @@ val loss/loss: https://stackoverflow.com/questions/36963054/what-is-train-loss-v
 implementing rmse: https://discuss.pytorch.org/t/rmse-loss-function/16540
 optimizing lstm: https://stats.stackexchange.com/questions/351808/lstm-time-series-forecasting-accuracy
 possible accuracy function for regression results: https://jamesmccaffrey.wordpress.com/2018/11/26/an-efficient-accuracy-function-for-pytorch-regression/
+cross-validation with deep learning: https://machinelearningmastery.com/evaluate-performance-deep-learning-models-keras/
 
 Needs(research):
 more pages on LSTM's https://arxiv.org/ftp/arxiv/papers/2005/2005.03993.pdf (LSTM's why they are used for time series/sentiment analysis)
@@ -25,7 +26,8 @@ info on vanishing gradient problem(the motivation for lstm's): https://medium.co
 metrics:
 root mean square error vs mean square error?: http://zerospectrum.com/2019/06/02/mae-vs-mse-vs-rmse/
 answer: root mean square error
-because it is a regression problem, we will use be minimizing root mean square error: ie the loss function will be mse
+because it is a regression problem, we will use be minimizing root mean square error: ie the loss function will be rmse
+-we may do cross validation, however this is computationally expensive
 -we can graph loss vs over epoch
 -we can also graph val loss over epoch
 -we can graph accuracy over epoch
