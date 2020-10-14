@@ -91,3 +91,6 @@ possible problems:
 Assorted to do:
 comment metacritic scraper-(Gavin)
 produce output file from metacrtitic scraper with same format as p4k dataset file
+
+reminders:
+no need for sigmoid in regression
