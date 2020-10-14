@@ -35,6 +35,7 @@ because it is a regression problem, we will use be minimizing root mean square e
 -scatterplot of actual vs predicted
 -max residual (diff between predicted and actual)
 -min residual
+-R^2
 -compare to benchmark of normal distribution predicting values
 
 milestones:
