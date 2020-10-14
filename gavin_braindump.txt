@@ -15,6 +15,7 @@ implementing rmse: https://discuss.pytorch.org/t/rmse-loss-function/16540
 optimizing lstm: https://stats.stackexchange.com/questions/351808/lstm-time-series-forecasting-accuracy
 possible accuracy function for regression results: https://jamesmccaffrey.wordpress.com/2018/11/26/an-efficient-accuracy-function-for-pytorch-regression/
 cross-validation with deep learning: https://machinelearningmastery.com/evaluate-performance-deep-learning-models-keras/
+very helpful page on a similar project: http://cs229.stanford.edu/proj2011/MehtaPhilipScaria-Predicting%20Star%20Ratings%20from%20Movie%20Review%20Comments.pdf
 
 Needs(research):
 more pages on LSTM's https://arxiv.org/ftp/arxiv/papers/2005/2005.03993.pdf (LSTM's why they are used for time series/sentiment analysis)
