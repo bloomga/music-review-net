@@ -54,7 +54,10 @@ preprocess stage
 coding stage
 -write model
 -debug model
--optimize model (see if we can push loss lower)
+-optimize/improve model (see if we can push loss lower)
+--cross validation: https://machinelearningmastery.com/evaluate-performance-deep-learning-models-keras/
+--https://stats.stackexchange.com/questions/351808/lstm-time-series-forecasting-accuracy
+--advanced preprocessing: http://cs229.stanford.edu/proj2011/MehtaPhilipScaria-Predicting%20Star%20Ratings%20from%20Movie%20Review%20Comments.pdf
 
 training stage
 -train on non standardized data and analyze results
