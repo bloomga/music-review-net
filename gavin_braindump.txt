@@ -1,20 +1,80 @@
 Links:
 OG backgammon google drive: https://drive.google.com/drive/folders/1qcYgxsP49UugdZiQcML_bcppwvRH9ZZQ
-stupid reminder page only i care about: https://stackoverflow.com/questions/419163/what-does-if-name-main-do
+getting python imports to work: https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 sentiment analysis tutorial/medium page: https://medium.com/@bhadreshpsavani/tutorial-on-sentimental-analysis-using-pytorch-b1431306a2d7
 info on LSTM Networks: https://colah.github.io/posts/2015-08-Understanding-LSTMs/
 lstm metric info: https://datascience.stackexchange.com/questions/44274/metrics-for-presenting-rnn-lstm-result
 pitchfork scraper and dataset: https://github.com/evanm31/p4k-scraper
 wiki: https://en.wikipedia.org/wiki/Long_short-term_memory
+more lstm: http://deeplearning.net/tutorial/lstm.html
 pytorch documentation (specifically saving model): https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-model-for-inference
+helpful stack exchange page to understand lstms: https://datascience.stackexchange.com/questions/66594/activation-function-between-lstm-layers
+pytorch documentation: https://pytorch.org/docs/stable/nn.html#lstm
+val loss/loss: https://stackoverflow.com/questions/36963054/what-is-train-loss-valid-loss-and-train-val-mean-in-nns
+implementing rmse: https://discuss.pytorch.org/t/rmse-loss-function/16540
+optimizing lstm: https://stats.stackexchange.com/questions/351808/lstm-time-series-forecasting-accuracy
+possible accuracy function for regression results: https://jamesmccaffrey.wordpress.com/2018/11/26/an-efficient-accuracy-function-for-pytorch-regression/
+cross-validation with deep learning: https://machinelearningmastery.com/evaluate-performance-deep-learning-models-keras/
+very helpful page on a similar project: http://cs229.stanford.edu/proj2011/MehtaPhilipScaria-Predicting%20Star%20Ratings%20from%20Movie%20Review%20Comments.pdf
+another helpful page: https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
+saving dictionarys to improve computation time: https://stackoverflow.com/questions/19201290/how-to-save-a-dictionary-to-a-file
 
 
 Needs(research):
-more pages on LSTM's 
+more pages on LSTM's https://arxiv.org/ftp/arxiv/papers/2005/2005.03993.pdf (LSTM's why they are used for time series/sentiment analysis)
 info on sentiment analysis
 info on metrics for rnn's, lstm networks, and nn in general
 info on time series
-info on vanishing gradient problem(the motivation for lstm's)
+info on vanishing gradient problem(the motivation for lstm's): https://medium.com/datadriveninvestor/how-do-lstm-networks-solve-the-problem-of-vanishing-gradients-a6784971a577
+
+
+metrics:
+root mean square error vs mean square error?: http://zerospectrum.com/2019/06/02/mae-vs-mse-vs-rmse/
+answer: root mean square error
+because it is a regression problem, we will use be minimizing root mean square error: ie the loss function will be rmse
+-we may do cross validation, however this is computationally expensive
+-we can graph loss vs over epoch
+-we can also graph val loss over epoch
+-we can graph accuracy over epoch
+-scatterplot of actual vs predicted
+-max residual (diff between predicted and actual)
+-min residual
+-R^2
+-compare to benchmark of normal distribution predicting values
+
+milestones:
+prep stage
+-get access to lab
+-get metacritic scraper working and produce dataset
+-continuous learnig/research
+
+preprocess stage
+-preprocess datasets to make the same formatting
+-produce standardized  score versions of the datasets
+-preprocess datsets to prepare for training/testing
+
+coding stage
+-write model
+-debug model
+-optimize/improve model (see if we can push loss lower)
+--cross validation: https://machinelearningmastery.com/evaluate-performance-deep-learning-models-keras/
+--https://stats.stackexchange.com/questions/351808/lstm-time-series-forecasting-accuracy
+--advanced preprocessing: http://cs229.stanford.edu/proj2011/MehtaPhilipScaria-Predicting%20Star%20Ratings%20from%20Movie%20Review%20Comments.pdf
+
+training stage
+-train on non standardized data and analyze results
+-train on standardized data and analyze results
+--if we compare predictions made from standardized data to non-standardized data we need to inverse_transform the score of the prediction
+
+'stretches':
+-p4k datset version with "best new music reissues" removed?
+--train on p4k dataset best new music reissues removed and best new music reissues kept
+---determine which is better
+-including genre/artist data?
+
+produce presentation and written project report
+
+
 
 Things we can/should do:
 train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
@@ -22,5 +82,20 @@ train 1 net on just p4k, 1 net on metacritic(homogenous) reviews
 -possible reasons for difference
 **p4k has different mean or std dev of scores
 **p4k uses a different vocabulary
-thus we can also train on the same data, but standardize the scores:
--eliminates possibility that p4k has different mean or std dev of scores
+-thus we can also train on the same data, but standardize the scores:
+**eliminates possibility that p4k has different mean or std dev of scores
+
+things to find/results:
+-differences between p4k model and metacritic model when evaluated on both testing sets
+--possible explanations? (this is conclusion material-i dont know what hard claims we can make)
+-how many epochs till loss stops decreasing?
+
+possible problems:
+-some review sites use a score decided by group of critics, review written by only 1 critic. (needs citation)
+
+Assorted to do:
+comment metacritic scraper-(Gavin)
+produce output file from metacrtitic scraper with same format as p4k dataset file
+
+reminders:
+no need for sigmoid in regression
