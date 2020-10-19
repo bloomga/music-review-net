@@ -2,8 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import unicodedata
+from sklearn.preprocessing import StandardScaler
+import numpy as np
 
-review_dict = {'source':[], 'date':[], 'rating':[], 'review':[]}
+review_dict = {'source':[], 'album':[], 'artist':[], 'date':[], 'review':[], 'score':[]}
 
 album_list = []
 
@@ -51,14 +53,29 @@ for album_info in album_list:
             review_dict['source'].append(review.find('div', class_='source').text)
         else:
             review_dict['source'].append(review.find('div', class_='source').find('a').text)
+        review_dict['album'].append(title)
+        review_dict['artist'].append(artist)
         review_dict['date'].append(review.find('div', class_='date').text)
-        review_dict['rating'].append(review.find('div', class_='review_grade').find_all('div')[0].text)
+        review_dict['score'].append(float((review.find('div', class_='review_grade').find_all('div')[0].text)) / 10)
         if review.find('span', class_='blurb blurb_expanded'):
             review_dict['review'].append(review.find('span', class_='blurb blurb_expanded').text)
         else:
             review_dict['review'].append(review.find('div', class_='review_body').text)
 
-
+#convert to csv
 meta_reviews = pd.DataFrame(review_dict)
 print(meta_reviews)
+compression_opts = dict(method='zip', archive_name='metacritic_reviews.csv')  
+meta_reviews.to_csv('metacritic_reviews.zip', index=False, compression=compression_opts) 
 
+#standardize data
+scaler = StandardScaler()
+scores = (np.asarray(review_dict['score'])).reshape(-1,1)
+scaler.fit(scores)
+std_scores = ((scaler.transform(scores)).reshape(1,-1)).tolist()
+std_scores = [item for sublist in std_scores for item in sublist]
+review_dict['score'] = std_scores
+
+#convert to csv
+compression_opts = dict(method='zip', archive_name='metacritic_reviews_std.csv')  
+meta_reviews.to_csv('metacritic_reviews_std.zip', index=False, compression=compression_opts) 
