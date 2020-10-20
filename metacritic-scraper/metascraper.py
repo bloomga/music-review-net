@@ -9,8 +9,8 @@ review_dict = {'source':[], 'album':[], 'artist':[], 'date':[], 'review':[], 'sc
 
 album_list = []
 
-for page in range(0,1):
-    url = 'https://www.metacritic.com/browse/albums/release-date/new-releases/date?page='+str(page)
+for page in range(0,30):
+    url = 'https://www.metacritic.com/browse/albums/release-date/available/date?page='+str(page)
     user_agent = {'User-agent': 'Mozilla/5.0'}
     response  = requests.get(url, headers = user_agent)
     soup = BeautifulSoup(response.text, 'html.parser')
