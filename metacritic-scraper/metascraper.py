@@ -4,6 +4,7 @@ import pandas as pd
 import unicodedata
 from sklearn.preprocessing import StandardScaler
 import numpy as np
+import json
 
 review_dict = {'source':[], 'album':[], 'artist':[], 'date':[], 'review':[], 'score':[]}
 
@@ -79,3 +80,6 @@ review_dict['score'] = std_scores
 #convert to csv
 compression_opts = dict(method='zip', archive_name='metacritic_reviews_std.csv')  
 meta_reviews.to_csv('metacritic_reviews_std.zip', index=False, compression=compression_opts) 
+
+with open("metacriticStandardizedScores.json, "w") as fp:
+    json.dump(std_scores, fp)

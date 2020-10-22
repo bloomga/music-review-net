@@ -3,6 +3,7 @@ import numpy as np
 import operator
 import json
 
+#to only be run on non standardized score review csv's as they have same reviews as standardized score reviews
 #we do this step after preprocessing, but before training. 
 #class containing the word frequency dictionary and its correspinding score
 class review:
@@ -83,7 +84,7 @@ print(word_to_int)
 
 with open("encoded" + fname + '.json', "w") as fp:
     json.dump(encoded_reviews, fp)
-with open("encoded" + fname + 'Scores.json', "w") as fp:
+with open(fname + 'Scores.json', "w") as fp:
     json.dump(scores, fp)
 with open(fname + 'Dict.json', "w") as fp:
     json.dump(word_to_int, fp)
