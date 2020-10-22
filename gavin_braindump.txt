@@ -20,6 +20,7 @@ another helpful page: https://machinelearningmastery.com/time-series-prediction-
 saving dictionarys to improve computation time: https://stackoverflow.com/questions/19201290/how-to-save-a-dictionary-to-a-file
 why remove stopwords/low info words: http://www.lrec-conf.org/proceedings/lrec2014/pdf/292_Paper.pdf
 removing stopwords:https://www.geeksforgeeks.org/removing-stop-words-nltk-python/
+saving lists as pickles: https://stackoverflow.com/questions/27745500/how-to-save-a-list-to-a-file-and-read-it-as-a-list-type
 
 Needs(research):
 more pages on LSTM's https://arxiv.org/ftp/arxiv/papers/2005/2005.03993.pdf (LSTM's why they are used for time series/sentiment analysis)
