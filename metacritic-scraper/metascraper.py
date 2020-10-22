@@ -75,11 +75,7 @@ scores = (np.asarray(review_dict['score'])).reshape(-1,1)
 scaler.fit(scores)
 std_scores = ((scaler.transform(scores)).reshape(1,-1)).tolist()
 std_scores = [item for sublist in std_scores for item in sublist]
-review_dict['score'] = std_scores
-
-#convert to csv
-compression_opts = dict(method='zip', archive_name='metacritic_reviews_std.csv')  
-meta_reviews.to_csv('metacritic_reviews_std.zip', index=False, compression=compression_opts) 
+ 
 
 with open("metacriticStandardizedScores.json, "w") as fp:
     json.dump(std_scores, fp)
