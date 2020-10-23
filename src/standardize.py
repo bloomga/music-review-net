@@ -1,4 +1,4 @@
-#standardizes scores of pitchfork dataset and then outputs the scores as a json
+#standardizes scores of either dataset and then outputs the scores as a json
 
 import requests 
 from bs4 import BeautifulSoup
@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import json
 
-fname = 'p4kreviews'
+fname = 'metacritic_reviews'
 df = pd.read_csv('datasets/' + fname + '.csv')
 print(df)
 
@@ -20,5 +20,5 @@ std_scores = ((scaler.transform(scores)).reshape(1,-1)).tolist()
 std_scores = [item for sublist in std_scores for item in sublist]
 
 
-with open("obj/p4kStandardizedScores.json", "w") as fp:
+with open("obj/" + fname + "StandardizedScores.json", "w") as fp:
     json.dump(std_scores, fp)
