@@ -1,3 +1,5 @@
+#standardizes scores of pitchfork dataset and then outputs the scores as a json
+
 import requests 
 from bs4 import BeautifulSoup
 import pandas as pd

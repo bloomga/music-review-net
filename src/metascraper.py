@@ -1,3 +1,5 @@
+#scrapes metacritic review data from recently released albums
+#outputs review data csv along with score and standardized score json's
 import requests 
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -10,12 +12,15 @@ review_dict = {'source':[], 'album':[], 'artist':[], 'date':[], 'review':[], 'sc
 
 album_list = []
 
+#loop through
 for page in range(0,30):
     url = 'https://www.metacritic.com/browse/albums/release-date/available/date?page='+str(page)
     user_agent = {'User-agent': 'Mozilla/5.0'}
     response  = requests.get(url, headers = user_agent)
     soup = BeautifulSoup(response.text, 'html.parser')
+    #get album titles and artist names for linking to review pages
     container = soup.find_all('td', class_='clamp-summary-wrap')
+    #format album titles and artist names
     for album in container:
         title = album.find('h3').text
         title = title.strip()
@@ -41,13 +46,17 @@ for page in range(0,30):
         artist = ''.join((c for c in unicodedata.normalize('NFD', artist) if unicodedata.category(c) != 'Mn'))
         album_list.append((title, artist))
 
+
+#visit album review pages
 for album_info in album_list:
     (title, artist) = album_info
     url = 'https://www.metacritic.com/music/'+str(title)+'/'+str(artist)+'/critic-reviews'
     user_agent = {'User-agent': 'Mozilla/5.0'}
     response  = requests.get(url, headers = user_agent)
     soup = BeautifulSoup(response.text, 'html.parser')
+    #loops through all reviews for specific album
     for review in soup.find_all('div', class_='review_content'):
+        #gets review info and scores
         if review.find('div', class_='source') == None:
                        break
         if review.find('div', class_='source').find('a') == None:

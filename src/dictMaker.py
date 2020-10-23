@@ -24,17 +24,19 @@ high_dict = {}
 low_bound = 4
 high_bound = 7
 
+
 for index, row in df.iterrows():
 
     text = row['review']
-    
+
+    #confirm that the review is not empty
     if isinstance(text, str):
         pass
     else:
         text = " "
         row['review'] = text
     text = text.split()
-    #determine low info words and create freq dict
+    #determine low info words and create word count dicts
     for j in text:
         dictionary[j] = dictionary.get(j, 0)+1
         if row['score'] >= high_bound:
@@ -52,13 +54,14 @@ for key in high_dict:
             dictionary.pop(key)
             low_info_words.append(key)
     
-    
+#creates word to integer encoding dict
 sorted_dict = dict( sorted(dictionary.items(), key=operator.itemgetter(1),reverse=True))
 ordered_key_list = list(sorted_dict.keys())
 word_to_int = {w:i+1 for i, w in enumerate(ordered_key_list)}
 
 scores = list(df['score'])
 
+#encodes reviews
 encoded_reviews = list()
 for index, row in df.iterrows():
     encoded_review = list()
@@ -68,20 +71,19 @@ for index, row in df.iterrows():
     for word in text:
         if count == 250:
             break
+        #dont include low info words in encoded review
         if word in low_info_words:
             pass
         elif word in word_to_int.keys():
             encoded = word_to_int[word]
             count += 1
             encoded_review.append(encoded)
+    #pads with zeroes so reviews all have same length
     while(count < 250):
         encoded_review.append(0)
     encoded_reviews.append(encoded_review)
-print(encoded_reviews)
-print(scores)
-print(word_to_int)
-#save lists of encoded reviews and encoding dict
 
+#save lists of encoded reviews and encoding dict
 with open("obj/encoded" + fname + '.json', "w") as fp:
     json.dump(encoded_reviews, fp)
 with open("obj/" + fname + 'Scores.json', "w") as fp:
