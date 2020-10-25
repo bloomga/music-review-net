@@ -14,7 +14,7 @@ class review:
         self.score = score
         self.id = ID
 
-fname = 'testReviews'
+fname = 'testP4kReviewsPreprocessed'
 df = pd.read_csv("datasets/" + fname + '.csv')
 
 
@@ -53,7 +53,8 @@ for key in high_dict:
         if info_score <= 2 and info_score >= 0.5:
             dictionary.pop(key)
             low_info_words.append(key)
-    
+
+print(low_info_words)  
 #creates word to integer encoding dict
 sorted_dict = dict( sorted(dictionary.items(), key=operator.itemgetter(1),reverse=True))
 ordered_key_list = list(sorted_dict.keys())

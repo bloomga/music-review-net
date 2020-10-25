@@ -13,7 +13,7 @@ except:
     nltk.download('stopwords')
     from nltk.corpus import stopwords
 
-fname = 'testP4kReviews'
+fname = 'metacritic_reviews_test'
 
 df = pd.read_csv("datasets/" + fname +".csv")
 
@@ -31,12 +31,13 @@ for index, row in df.iterrows():
             df.at[index, 'review'] = set_row 
             row['review'] = set_row
 
-    #reduce length of review to the standard 250
+    #reduce length of review to 300
+    #this will be standardized later to 250 words once low-info words removed
     #this also drastically speeds up the loops below
     #remove all stopwords except 'not'
     nonStopwords = []
     count = 0
-    limit = 250
+    limit = 300
     sw = stopwords.words('english')
     for word in row['review'].split(' '):
         if count == limit:
