@@ -21,7 +21,6 @@ df = pd.read_csv("datasets/" + fname +".csv")
 df['review'] = df['review'].str.replace('[{}]'.format(punctuation), '')
 df['review'] = df['review'].str.replace('[{}]'.format(digits), '')
 df['review'] = df['review'].str.lower()
-
         
 for index, row in df.iterrows():
     #remove "best new music" or "best new reissue" from bnm/bnr p4k reviews
@@ -62,6 +61,7 @@ for index, row in df.iterrows():
     finalWords += (nonStopwords[x+1])
 
     df.at[index, 'review'] = finalWords
+
 
 #Save to a new csv
 newfname = fname + "Preprocessed"
