@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import json
 
-fname = 'metacritic_reviews'
+fname = 'testP4kReviews'
 df = pd.read_csv('datasets/' + fname + '.csv')
 print(df)
 
