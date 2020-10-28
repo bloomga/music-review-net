@@ -13,7 +13,7 @@ except:
     nltk.download('stopwords')
     from nltk.corpus import stopwords
 
-fname = sys.argv[0]
+fname = sys.argv[1]
 
 df = pd.read_csv("datasets/" + fname +".csv")
 

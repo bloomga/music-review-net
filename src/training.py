@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
 import sys
 
-fname = sys.argv[0]
+fname = sys.argv[1]
 standardized = 0
 
 #load reviews, scores, and encoding dict
