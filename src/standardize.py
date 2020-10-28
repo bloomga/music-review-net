@@ -7,8 +7,9 @@ import unicodedata
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import json
+import sys
 
-fname = 'testP4kReviews'
+fname = sys.argv[0]
 df = pd.read_csv('datasets/' + fname + '.csv')
 print(df)
 

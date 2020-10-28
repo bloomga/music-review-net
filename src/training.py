@@ -5,8 +5,9 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
+import sys
 
-fname = "metacritic_reviews_test"
+fname = sys.argv[0]
 standardized = 0
 
 #load reviews, scores, and encoding dict

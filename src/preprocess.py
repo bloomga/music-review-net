@@ -13,7 +13,7 @@ except:
     nltk.download('stopwords')
     from nltk.corpus import stopwords
 
-fname = 'metacritic_reviews_test'
+fname = sys.argv[0]
 
 df = pd.read_csv("datasets/" + fname +".csv")
 

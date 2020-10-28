@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import operator
 import json
+import sys
 
 #to only be run on non standardized score review csv's as they have same reviews as standardized score reviews
 #we do this step after preprocessing, but before training. 
@@ -14,7 +15,7 @@ class review:
         self.score = score
         self.id = ID
 
-fname = 'metacritic_reviews_testPreprocessed'
+fname = sys.argv[0]
 df = pd.read_csv("datasets/" + fname + '.csv')
 
 
