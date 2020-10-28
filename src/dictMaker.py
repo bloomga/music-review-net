@@ -14,7 +14,7 @@ class review:
         self.score = score
         self.id = ID
 
-fname = 'testP4kReviewsPreprocessed'
+fname = 'metacritic_reviews_testPreprocessed'
 df = pd.read_csv("datasets/" + fname + '.csv')
 
 
@@ -34,7 +34,7 @@ for index, row in df.iterrows():
         pass
     else:
         text = " "
-        row['review'] = text
+        df.at[index, 'review'] = text
     text = text.split()
     #determine low info words and create word count dicts
     for j in text:
@@ -56,8 +56,8 @@ for key in high_dict:
 
 print(low_info_words)  
 #creates word to integer encoding dict
-sorted_dict = dict( sorted(dictionary.items(), key=operator.itemgetter(1),reverse=True))
-ordered_key_list = list(sorted_dict.keys())
+dictionary = dict( sorted(dictionary.items(), key=operator.itemgetter(1),reverse=True))
+ordered_key_list = list(dictionary.keys())
 word_to_int = {w:i+1 for i, w in enumerate(ordered_key_list)}
 
 scores = list(df['score'])
@@ -82,6 +82,7 @@ for index, row in df.iterrows():
     #pads with zeroes so reviews all have same length
     while(count < 250):
         encoded_review.append(0)
+        count += 1
     encoded_reviews.append(encoded_review)
 
 #save lists of encoded reviews and encoding dict

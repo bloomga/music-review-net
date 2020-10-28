@@ -23,12 +23,17 @@ df['review'] = df['review'].str.replace('[{}]'.format(digits), '')
 df['review'] = df['review'].str.lower()
         
 for index, row in df.iterrows():
+    text = row["review"]
+    if isinstance(text, str):
+        pass
+    else:
+        text = " "
+        
     #remove "best new music" or "best new reissue" from bnm/bnr p4k reviews
     if 'p4k' in fname or 'pitchfork' in fname:
         if row['best'] == 1:
-            set_row = ' '.join(row['review'].split(' ')[3:])
-            df.at[index, 'review'] = set_row 
-            row['review'] = set_row
+            set_row = ' '.join(text.split(' ')[3:])
+            text = set_row
 
     #reduce length of review to 300
     #this will be standardized later to 250 words once low-info words removed
@@ -38,13 +43,13 @@ for index, row in df.iterrows():
     count = 0
     limit = 300
     sw = stopwords.words('english')
-    for word in row['review'].split(' '):
+    for word in text.split(' '):
         if count == limit:
             break
         if word not in sw or word == "not":
             nonStopwords.append(word)
-            if word == 'not':
-                limit += 1
+            if word != 'not':
+                count += 1
   
     #concatonate 'not's
     finalWords = ''

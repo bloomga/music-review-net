@@ -21,6 +21,7 @@ saving dictionarys to improve computation time: https://stackoverflow.com/questi
 why remove stopwords/low info words: http://www.lrec-conf.org/proceedings/lrec2014/pdf/292_Paper.pdf
 removing stopwords:https://www.geeksforgeeks.org/removing-stop-words-nltk-python/
 saving lists as pickles: https://stackoverflow.com/questions/27745500/how-to-save-a-list-to-a-file-and-read-it-as-a-list-type
+choosing hyperparameters: https://towardsdatascience.com/choosing-the-right-hyperparameters-for-a-simple-lstm-using-keras-f8e9ed76f046
 
 Needs(research):
 more pages on LSTM's https://arxiv.org/ftp/arxiv/papers/2005/2005.03993.pdf (LSTM's why they are used for time series/sentiment analysis)
