@@ -123,7 +123,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                 #CODE save these all in lists for each fold along with epoch/step/and loss
                 print("Fold: {}/{}...".format(fold, k), 
                       "Epoch: {}/{}...".format(e+1, epochs),
-                      "Step: {}...".format(counter),
+                      "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()))
                   
         #calculate validation loss
