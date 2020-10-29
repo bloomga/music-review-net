@@ -116,10 +116,11 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             optimizer.step()
 
             #calculate loss stats
-            #WE WILL INCLUDE MORE DATA GATHERING IN THIS STEP TOO
             if step_counter % 50 == 0: #change the print rate for testing
-                #CHANGE FROM PRINTING TO STORAGE FOR LATER PLOTTING
-                #CALL PLOTTING FROM SEPERATE IMPORTED FILE, DONT CROWD THIS ONE
+                #CODE find training r^2, similar method to loss
+                #CODE find largest and smallest (absolute value) residuals from all outputs
+                #vs targets
+                #CODE save these all in lists for each fold along with epoch/step/and loss
                 print("Fold: {}/{}...".format(fold, k), 
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(counter),
@@ -147,14 +148,17 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
         val_loss = np.mean(val_losses)
         net.train() #set back to training mode
-
-        #CHANGE FROM PRINTING TO STORAGE FOR LATER PLOTTING
-        #CALL PLOTTING FROM SEPERATE IMPORTED FILE, DONT CROWD THIS ONE
+        #CODE find val r^2, similar method to val_loss
+        #CODE find largest and smallest (absolute value) residual from all outputs vs targets
+        #CODE store these and val_losses all in a list
+        
         print("Val Loss: {:.6f}".format(val_loss))
 
     model_list.append(net)
     val_loss_list.append(val_loss)
-
+    #CODE store Val Loss, val r^2, and min/max residuals vs Epoch for each fold
+    #and its accompanying model in seperate lists
+    
 #determine best model
 lowest_val_loss = 100000
 index = 0
@@ -192,7 +196,14 @@ for inputs, targets in test_loader:
     output, test_hidden = net(inputs, test_hidden)
     test_loss = criterion(output, targets)
     test_losses.append(test_loss)
-    #MORE STATS HERE
+    #CODE find test r^2, similar method to test_loss
+    #CODE find largest and smallest (absolute value) residual from all outputs vs targets
 
+#CODE graph scatter plot of all outputs concacenated together
+#and all targets concacenated together
 test_loss=np.mean(test_losses)
 print("Test Loss: {:.6f}".format(test_loss)
+#CODE graph Val Loss, val r^2, and min/max residuals vs Epoch for each fold
+#and its accompanying model
+#CODE graph training Loss, training r^2, and min/max residuals vs step (annotated by epoch)
+#for each fold and its accompanying model
