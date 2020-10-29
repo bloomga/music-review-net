@@ -9,7 +9,7 @@ import numpy as np
 import json
 import sys
 
-fname = sys.argv[1]
+fname = (sys.argv[1])
 df = pd.read_csv('datasets/' + fname + '.csv')
 print(df)
 

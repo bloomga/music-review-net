@@ -15,7 +15,7 @@ class review:
         self.score = score
         self.id = ID
 
-fname = sys.argv[1]
+fname = str(sys.argv[1])
 df = pd.read_csv("datasets/" + fname + '.csv')
 
 
