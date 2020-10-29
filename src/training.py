@@ -74,11 +74,11 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     val_fold_y = train_y[val_index]
 
     #create tensors and dataloaders
-    batch_size=50
+    batch_size = 50
     train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
     validate = TensorDataset(torch.FloatTensor(val_fold_x), torch.FloatTensor(val_fold_y))
-    train_loader = DataLoader(train, batch_size = batch_size, shuffle = True)
-    val_loader = DataLoader(validate, batch_size = batch_size, shuffle = True)
+    train_loader = DataLoader(train, batch_size = batch_size, shuffle = True, drop_last = True)
+    val_loader = DataLoader(validate, batch_size = batch_size, shuffle = True, drop_last = True)
 
 
     epochs = 4 #we will adjust this after training, see how many epochs before loss stops decreasing
@@ -180,7 +180,7 @@ test_hidden = net.init_hidden_state(batch_size, train_on_gpu)
 net.eval()
 
 test = TensorDataset(torch.FloatTensor(reserved_test_x), torch.FloatTensor(reserved_test_y))
-test_loader = DataLoader(test, batch_size = batch_size, shuffle = True)
+test_loader = DataLoader(test, batch_size = batch_size, shuffle = True, drop_last = True)
 
 test_losses = list()
 
