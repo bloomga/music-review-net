@@ -202,7 +202,7 @@ for inputs, targets in test_loader:
 #CODE graph scatter plot of all outputs concacenated together
 #and all targets concacenated together
 test_loss=np.mean(test_losses)
-print("Test Loss: {:.6f}".format(test_loss)
+print("Test Loss: {:.6f}".format(test_loss))
 #CODE graph Val Loss, val r^2, and min/max residuals vs Epoch for each fold
 #and its accompanying model
 #CODE graph training Loss, training r^2, and min/max residuals vs step (annotated by epoch)
