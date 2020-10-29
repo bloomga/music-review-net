@@ -29,7 +29,7 @@ with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
 print("dataset std deviation: " + str(np.std(scores)))
-print("dataset mean: " + str(np.mean(scores))
+print("dataset mean: " + str(np.mean(scores)))
 
 #set hyperparameters
 #using basic hyperparameters for now, these will be optimized later
