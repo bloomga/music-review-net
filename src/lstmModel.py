@@ -15,7 +15,7 @@ class MusicLSTM(nn.Module):
         self.embedding = nn.Embedding(vocab_size, input_size)
 
         #lstm layer
-        self.lstm = nn.LSTM(input_size, hidden_size, n_layers=num_rec_layers, dropout=dropout, batch_first=True)
+        self.lstm = nn.LSTM(input_size, hidden_size, num_rec_layers, dropout=dropout, batch_first=True)
 
         #dropout layer
         self.dropout = nn.Dropout(0.3)
@@ -23,7 +23,7 @@ class MusicLSTM(nn.Module):
         #fully connected linear layers
         self.fc1 = nn.Linear(hidden_size, 64)
         self.fc2 = nn.Linear(64, 16)
-        self.fc3 = nn.Linear(16, ouput_size = 1)
+        self.fc3 = nn.Linear(16, output_size)
 
     #feeds forward some input x and hidden state through the model to produce an output
     def forward(self, x, hidden):
@@ -32,7 +32,7 @@ class MusicLSTM(nn.Module):
         embedded = self.embedding(x)
 
         #lstm output
-        lstm_out, hidden_state = self.lstm(emedded, hidden)
+        lstm_out, hidden_state = self.lstm(embedded, hidden)
 
         #pytorch expects a contiguous tensor
         lstm_out_contig = lstm_out.contiguous().view(-1, self.hidden_size)

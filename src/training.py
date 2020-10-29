@@ -1,4 +1,5 @@
 from lstmModel import MusicLSTM
+import torch.nn as nn
 import pandas as pd
 import numpy as np
 import json
@@ -8,7 +9,7 @@ from sklearn.model_selection import KFold
 import sys
 
 #these will be changed to command line inputs
-#fname = str(sys.argv[0])
+#fname = str(sys.argv[1])
 fname = "metacritic_reviews"
 standardized = 0 
 
@@ -34,27 +35,28 @@ output_size = 1
 input_size = 400
 hidden_size = 256
 num_rec_layers = 2
-net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers)
+dropout = 0.5
+net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
+print(net)
 
 #loss function RMSE
 criterion = RMSELoss
     
 #optmizer
-optimizer = torch.optim.Adam(net.parameters, lr=0.001)
+optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
 # check if CUDA is available
 train_on_gpu = torch.cuda.is_available()
-if(train_on_gpu):
-    net.cuda()
+device = torch.device("cuda" if train_on_gpu else "cpu")
 
 #put into training mode
 net.train()
 
 #split datasets into train and test
-train_x = reviews[:int(0.8*len(reviews))]
-train_y = scores[:int(0.8*len(reviews))]
-reserved_test_x = reviews[int(0.8*len(reviews)):]
-reserved_test_y = scores[int(0.8*len(reviews)):]              
+train_x = np.array(reviews[:int(0.8*len(reviews))])
+train_y = np.array(scores[:int(0.8*len(reviews))])
+reserved_test_x = np.array(reviews[int(0.8*len(reviews)):])
+reserved_test_y = np.array(scores[int(0.8*len(reviews)):])             
 
 #create k-folds=10 and loop
 kfold = KFold(n_splits=4) #we can lower the splits number for testing
@@ -67,10 +69,10 @@ for fold, (train_index, test_index) in enumerate(kfold.split(train_x, train_y)):
 
     #create tensors and dataloaders
     batch_size=50
-    train = torch.utils.data.TensorDataset(train_fold_x, train_fold_y)
-    test = torch.utils.data.TensorDataset(test_fold_x, test_fold_y)
-    train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle = True)
-    test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle = True)
+    train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
+    test = TensorDataset(torch.FloatTensor(test_fold_x), torch.FloatTensor(test_fold_y))
+    train_loader = DataLoader(train, batch_size = batch_size, shuffle = True)
+    test_loader = DataLoader(test, batch_size = batch_size, shuffle = True)
 
 
     epochs = 4 #we will adjust this after training, see how many epochs before loss stops decreasing
@@ -79,15 +81,15 @@ for fold, (train_index, test_index) in enumerate(kfold.split(train_x, train_y)):
     #epoch loop
     for e in range(epochs):
         #init zeroed hidden state
-        hidden = net.init_hidden(batch_size)
+        hidden = net.init_hidden_state(batch_size, train_on_gpu)
 
         #batch loop
-        for inputs, labels in train_loader:
+        for inputs, targets in train_loader:
             step_counter += 1
-
-            if train_on_gpu:
-                inputs = inputs.cuda()
-                labels = labels.cuda()
+            
+            inputs = inputs.to(device).long()
+            targets = targets.to(device).long()
+            
             #create new hidden state variables
             hidden = tuple([h.data for h in hidden])
 
@@ -98,7 +100,7 @@ for fold, (train_index, test_index) in enumerate(kfold.split(train_x, train_y)):
             output, hidden = net(inputs, hidden)
 
             #calculate loss and backwards propogate
-            loss = criterion(output, labels)
+            loss = criterion(output, targets)
             loss.backward()
 
             #built-in function to help prevent the exploding gradient problem that is common in RNN's
@@ -112,22 +114,21 @@ for fold, (train_index, test_index) in enumerate(kfold.split(train_x, train_y)):
             if step_counter % 50 == 0: #change the print rate for testing
                 #calculate validation loss
                 #first init a new zeroed hidden state
-                val_hidden = net.init_hidden(batch_size)
+                val_hidden = net.init_hidden_state(batch_size, train_on_gpu)
                 val_losses = list()
 
                 net.eval() #put net in eval mode so it doesnt learn from the validation data
-                for inputs, labels in test_loader:
+                for inputs, targets in test_loader:
 
-                    if train_on_gpu:
-                        inputs = inputs.cuda()
-                        labels = labels.cuda()
+                    inputs = inputs.to(device).long()
+                    targets = targets.to(device).long()
 
                     #create new hidden state variables
                     val_hidden = tuple([h.data for h in val_hidden])
 
                     #get output and then calculate loss
                     output, val_hidden = net(inputs, val_hidden)
-                    val_loss = criterion(output, labels)
+                    val_loss = criterion(output, targets)
 
                     val_losses.append(val_loss.item())
 
@@ -139,4 +140,5 @@ for fold, (train_index, test_index) in enumerate(kfold.split(train_x, train_y)):
                 print("Epoch: {}/{}...".format(e+1, epochs),
                   "Step: {}...".format(counter),
                   "Loss: {:.6f}...".format(loss.item()),
-                  "Val Loss: {:.6f}".format(val_loss)
+                  "Val Loss: {:.6f}".format(val_loss))
+
