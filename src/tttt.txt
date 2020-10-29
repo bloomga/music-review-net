@@ -5,11 +5,9 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
-import sys
 
 #these will be changed to command line inputs
-#fname = str(sys.argv[0])
-fname = "metacritic_reviews"
+fname = "metacritic_reviews_test"
 standardized = 0 
 
 #rmse loss function
@@ -21,9 +19,9 @@ std_str = "Preprocessed"
 if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)[:1000] #for testing
+    scores = json.load(fp)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)[:1000] #for testing
+    reviews = json.load(fp)
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
@@ -56,8 +54,8 @@ train_y = scores[:int(0.8*len(reviews))]
 reserved_test_x = reviews[int(0.8*len(reviews)):]
 reserved_test_y = scores[int(0.8*len(reviews)):]              
 
-#create k-folds=10 and loop
-kfold = KFold(n_splits=4) #we can lower the splits number for testing
+#create k-folds and loop
+kfold = KFold(n_splits=10) #we can lower the splits number for testing
 for fold, (train_index, test_index) in enumerate(kfold.split(train_x, train_y)):
     #divide up folds
     train_fold_x = train_x[train_index]
@@ -109,7 +107,7 @@ for fold, (train_index, test_index) in enumerate(kfold.split(train_x, train_y)):
 
             #calculate loss stats
             #WE WILL INCLUDE MORE DATA GATHERING IN THIS STEP TOO
-            if step_counter % 50 == 0: #change the print rate for testing
+            if step_counter % 100 == 0: #change the print rate for testing
                 #calculate validation loss
                 #first init a new zeroed hidden state
                 val_hidden = net.init_hidden(batch_size)
