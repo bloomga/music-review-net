@@ -28,7 +28,8 @@ with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
-print(np.std(scores))
+print("dataset std deviation: " + str(np.std(scores)))
+print("dataset mean: " + str(np.mean(scores))
 
 #set hyperparameters
 #using basic hyperparameters for now, these will be optimized later
@@ -74,6 +75,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     train_fold_y = train_y[train_index]
     val_fold_y = train_y[val_index]
 
+    print(len(train_fold_x))
+    print(len(train_fold_y))   
     #create tensors and dataloaders
     batch_size = 50
     train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
@@ -117,7 +120,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             optimizer.step()
 
             #calculate loss stats
-            if step_counter % 50 == 0: #change the print rate for testing
+            if step_counter % 10 == 0: #change the print rate for testing
                 #CODE find training r^2, similar method to loss
                 #CODE find largest and smallest (absolute value) residuals from all outputs
                 #vs targets
@@ -153,7 +156,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #CODE find largest and smallest (absolute value) residual from all outputs vs targets
         #CODE store these and val_losses all in a list
         
-        print("Val Loss: {:.6f}".format(val_loss))
+        print("Epoch: {}/{}...".format(e+1, epochs),
+              "Val Loss: {:.6f}...".format(val_loss))
 
     model_list.append(net)
     val_loss_list.append(val_loss)
