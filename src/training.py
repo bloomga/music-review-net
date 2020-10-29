@@ -22,11 +22,14 @@ std_str = "Preprocessed"
 if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)[:1000] #for testing
+    scores = json.load(fp)[:3000] #for testing
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)[:1000] #for testing
+    reviews = json.load(fp)[:3000] #for testing
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
+
+print("dataset std deviation: " + str(np.std(scores)))
+print("dataset mean: " + str(np.mean(scores)))
 
 #set hyperparameters
 #using basic hyperparameters for now, these will be optimized later
@@ -59,7 +62,6 @@ val_loss_list = list()
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     #initialize model
     net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
-    print(net)
 
     #optmizer
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
@@ -73,12 +75,14 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     train_fold_y = train_y[train_index]
     val_fold_y = train_y[val_index]
 
+    print(len(train_fold_x))
+    print(len(val_fold_x))   
     #create tensors and dataloaders
-    batch_size=50
+    batch_size = 50
     train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
     validate = TensorDataset(torch.FloatTensor(val_fold_x), torch.FloatTensor(val_fold_y))
-    train_loader = DataLoader(train, batch_size = batch_size, shuffle = True)
-    val_loader = DataLoader(validate, batch_size = batch_size, shuffle = True)
+    train_loader = DataLoader(train, batch_size = batch_size, shuffle = True, drop_last = True)
+    val_loader = DataLoader(validate, batch_size = batch_size, shuffle = True, drop_last = True)
 
 
     epochs = 4 #we will adjust this after training, see how many epochs before loss stops decreasing
@@ -116,14 +120,14 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             optimizer.step()
 
             #calculate loss stats
-            if step_counter % 50 == 0: #change the print rate for testing
+            if step_counter % 10 == 0: #change the print rate for testing
                 #CODE find training r^2, similar method to loss
                 #CODE find largest and smallest (absolute value) residuals from all outputs
                 #vs targets
                 #CODE save these all in lists for each fold along with epoch/step/and loss
-                print("Fold: {}/{}...".format(fold, k), 
+                print("Fold: {}/{}...".format(fold+1, k), 
                       "Epoch: {}/{}...".format(e+1, epochs),
-                      "Step: {}...".format(counter),
+                      "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()))
                   
         #calculate validation loss
@@ -152,7 +156,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #CODE find largest and smallest (absolute value) residual from all outputs vs targets
         #CODE store these and val_losses all in a list
         
-        print("Val Loss: {:.6f}".format(val_loss))
+        print("Epoch: {}/{}...".format(e+1, epochs),
+              "Val Loss: {:.6f}...".format(val_loss))
 
     model_list.append(net)
     val_loss_list.append(val_loss)
@@ -180,7 +185,7 @@ test_hidden = net.init_hidden_state(batch_size, train_on_gpu)
 net.eval()
 
 test = TensorDataset(torch.FloatTensor(reserved_test_x), torch.FloatTensor(reserved_test_y))
-test_loader = DataLoader(test, batch_size = batch_size, shuffle = True)
+test_loader = DataLoader(test, batch_size = batch_size, shuffle = True, drop_last = True)
 
 test_losses = list()
 
@@ -195,14 +200,14 @@ for inputs, targets in test_loader:
     #get output and then calculate loss
     output, test_hidden = net(inputs, test_hidden)
     test_loss = criterion(output, targets)
-    test_losses.append(test_loss)
+    test_losses.append(test_loss.item())
     #CODE find test r^2, similar method to test_loss
     #CODE find largest and smallest (absolute value) residual from all outputs vs targets
 
 #CODE graph scatter plot of all outputs concacenated together
 #and all targets concacenated together
 test_loss=np.mean(test_losses)
-print("Test Loss: {:.6f}".format(test_loss)
+print("Test Loss: {:.6f}".format(test_loss))
 #CODE graph Val Loss, val r^2, and min/max residuals vs Epoch for each fold
 #and its accompanying model
 #CODE graph training Loss, training r^2, and min/max residuals vs step (annotated by epoch)
