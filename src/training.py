@@ -22,11 +22,13 @@ std_str = "Preprocessed"
 if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)[:1000] #for testing
+    scores = json.load(fp)[:3000] #for testing
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)[:1000] #for testing
+    reviews = json.load(fp)[:3000] #for testing
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
+
+print(np.std(scores))
 
 #set hyperparameters
 #using basic hyperparameters for now, these will be optimized later
@@ -59,7 +61,6 @@ val_loss_list = list()
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     #initialize model
     net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
-    print(net)
 
     #optmizer
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
@@ -121,7 +122,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                 #CODE find largest and smallest (absolute value) residuals from all outputs
                 #vs targets
                 #CODE save these all in lists for each fold along with epoch/step/and loss
-                print("Fold: {}/{}...".format(fold, k), 
+                print("Fold: {}/{}...".format(fold+1, k), 
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()))
@@ -195,7 +196,7 @@ for inputs, targets in test_loader:
     #get output and then calculate loss
     output, test_hidden = net(inputs, test_hidden)
     test_loss = criterion(output, targets)
-    test_losses.append(test_loss)
+    test_losses.append(test_loss.item())
     #CODE find test r^2, similar method to test_loss
     #CODE find largest and smallest (absolute value) residual from all outputs vs targets
 
