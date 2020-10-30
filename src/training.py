@@ -54,7 +54,7 @@ reserved_test_x = np.array(reviews[int(0.9*len(reviews)):])
 reserved_test_y = np.array(scores[int(0.9*len(reviews)):])             
 
 #create k-folds and loop
-k = 4 #want k=10. we can change k for testing
+k = 10 #want k=10. we can change k for testing
 kfold = KFold(n_splits=k) 
 model_list = list()
 val_loss_list = list()
@@ -78,7 +78,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     print(len(train_fold_x))
     print(len(val_fold_x))   
     #create tensors and dataloaders
-    batch_size = 50
+    batch_size = 25
     train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
     validate = TensorDataset(torch.FloatTensor(val_fold_x), torch.FloatTensor(val_fold_y))
     train_loader = DataLoader(train, batch_size = batch_size, shuffle = True, drop_last = True)
