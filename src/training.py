@@ -64,7 +64,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
 
     #optmizer
-    optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(net.parameters(), lr=0.0005)
 
     #put into training mode
     net.train() 
