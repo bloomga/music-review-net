@@ -47,17 +47,12 @@ criterion = RMSELoss
 train_on_gpu = torch.cuda.is_available()
 device = torch.device("cuda" if train_on_gpu else "cpu")
 
-#split datasets into train and test
-train_x = np.array(reviews[:int(0.9*len(reviews))])
-train_y = np.array(scores[:int(0.9*len(reviews))])
-reserved_test_x = np.array(reviews[int(0.9*len(reviews)):])
-reserved_test_y = np.array(scores[int(0.9*len(reviews)):])             
+train_x = np.array(reviews)
+train_y = np.array(scores)
 
 #create k-folds and loop
 k = 10 #want k=10. we can change k for testing
 kfold = KFold(n_splits=k) 
-model_list = list()
-val_loss_list = list()
 
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     #initialize model
@@ -159,56 +154,14 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss))
 
-    model_list.append(net)
-    val_loss_list.append(val_loss)
-    #CODE store Val Loss, val r^2, and min/max residuals vs Epoch for each fold
-    #and its accompanying model in seperate lists
+        #CODE store Val Loss, val r^2, and min/max residuals vs Epoch for each fold
+        #and its accompanying model in seperate lists
     
-#determine best model
-lowest_val_loss = 100000
-index = 0
-for i in range(len(model_list)):
-    if val_loss_list[i] <= lowest_val_loss:
-        lowest_val_loss = val_loss_list[i]
-        index = i
 
-#test the best model to get statistics
-net = model_list[i]
-
-#optmizer
-optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
-
-#create new hidden state variables
-test_hidden = net.init_hidden_state(batch_size, train_on_gpu)
-
-#put into eval mode
-net.eval()
-
-test = TensorDataset(torch.FloatTensor(reserved_test_x), torch.FloatTensor(reserved_test_y))
-test_loader = DataLoader(test, batch_size = batch_size, shuffle = True, drop_last = True)
-
-test_losses = list()
-
-for inputs, targets in test_loader:
-    
-    inputs = inputs.to(device).long()
-    targets = targets.to(device).long()
-
-    #create new hidden state variables
-    test_hidden = tuple([h.data for h in test_hidden])
-
-    #get output and then calculate loss
-    output, test_hidden = net(inputs, test_hidden)
-    test_loss = criterion(output, targets)
-    test_losses.append(test_loss.item())
-    #CODE find test r^2, similar method to test_loss
-    #CODE find largest and smallest (absolute value) residual from all outputs vs targets
-
-#CODE graph scatter plot of all outputs concacenated together
-#and all targets concacenated together
-test_loss=np.mean(test_losses)
-print("Test Loss: {:.6f}".format(test_loss))
 #CODE graph Val Loss, val r^2, and min/max residuals vs Epoch for each fold
 #and its accompanying model
 #CODE graph training Loss, training r^2, and min/max residuals vs step (annotated by epoch)
 #for each fold and its accompanying model
+
+#CODE graph scatter plot of outputs and targets together
+#do this of maybe on last fold only or other some other small set (not as important as other CODES)
