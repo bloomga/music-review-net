@@ -8,14 +8,13 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
 import sys
 
-#these will be changed to command line inputs
+#CODE make this all into a function that accepts hyper-parameter settings 
+#and loops over all options. put in new file called grid search.
+
+
 #fname = str(sys.argv[1])
 fname = "metacritic_reviews"
 standardized = 0 
-
-#rmse loss function
-def RMSELoss(yhat,y):
-    return torch.sqrt(torch.mean((yhat-y)**2))
 
 #load reviews, scores, and encoding dict
 std_str = "Preprocessed"
@@ -40,8 +39,8 @@ hidden_size = 256
 num_rec_layers = 2
 dropout = 0.5
 
-#loss function RMSE
-criterion = RMSELoss
+#loss function MSE
+criterion = nn.MSELoss()
 
 # check if CUDA is available
 train_on_gpu = torch.cuda.is_available()
@@ -51,7 +50,7 @@ train_x = np.array(reviews)
 train_y = np.array(scores)
 
 #create k-folds and loop
-k = 10 #want k=10. we can change k for testing
+k = 10 
 kfold = KFold(n_splits=k) 
 
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
@@ -115,15 +114,19 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             optimizer.step()
 
             #calculate loss stats
-            if step_counter % 10 == 0: #change the print rate for testing
+            if step_counter % 20 == 0: #currently lower print rate for testing
                 #CODE find training r^2, similar method to loss
-                #CODE find largest and smallest (absolute value) residuals from all outputs
+                #CODE find training rmse (square root of loss)
+                #CODE find largest and smallest (absolute value) residuals from outputs
                 #vs targets
-                #CODE save these all in lists for each fold along with epoch/step/and loss
+                #CODE print all of these
                 print("Fold: {}/{}...".format(fold+1, k), 
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()))
+
+                #for graphing later
+                #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
                   
         #calculate validation loss
         #first init a new zeroed hidden state
@@ -148,20 +151,25 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         val_loss = np.mean(val_losses)
         net.train() #set back to training mode
         #CODE find val r^2, similar method to val_loss
+        #CODE find val rmse (just square root of loss)
         #CODE find largest and smallest (absolute value) residual from all outputs vs targets
-        #CODE store these and val_losses all in a list
-        
+        #not just the last data load 
+        #CODE printing these 
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss))
 
-        #CODE store Val Loss, val r^2, and min/max residuals vs Epoch for each fold
-        #and its accompanying model in seperate lists
+        #for graphing later
+        #CODE save these val stats all in a list of lists for the last fold along with epoch
+
+    #CODE print final Val Loss, final val rmse, final val r^2, and final min/max residuals
+    #and its accompanying model (ie hyperparameters) 
     
 
-#CODE graph Val Loss, val r^2, and min/max residuals vs Epoch for each fold
-#and its accompanying model
+#after we finish tuning
+#graphs for later (think zooming in on 1 fold)
 #CODE graph training Loss, training r^2, and min/max residuals vs step (annotated by epoch)
-#for each fold and its accompanying model
-
-#CODE graph scatter plot of outputs and targets together
-#do this of maybe on last fold only or other some other small set (not as important as other CODES)
+#for a singular fold and its accompanying model
+#CODE graph  Val Loss, val RMSE, val r^2, and min/max residuals vs epoch for a singular
+#fold and its accompanying model
+#CODE graph scatter plot of some outputs and targets together
+#do this for validation in a singular fold 
