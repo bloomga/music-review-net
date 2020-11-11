@@ -10,7 +10,7 @@ class MusicLSTM(nn.Module):
         self.output_dim = output_size
         self.num_rec_layers = num_rec_layers
         self.hidden_size = hidden_size
-
+        
         #embedding layer
         self.embedding = nn.Embedding(vocab_size, input_size)
 
@@ -24,6 +24,10 @@ class MusicLSTM(nn.Module):
         self.fc1 = nn.Linear(hidden_size, 64)
         self.fc2 = nn.Linear(64, 16)
         self.fc3 = nn.Linear(16, output_size)
+
+        #final ReLU layer (we dont need values less than 0)
+        self.relu = nn.ReLU()
+
 
     #feeds forward some input x and hidden state through the model to produce an output
     def forward(self, x, hidden):
@@ -41,11 +45,14 @@ class MusicLSTM(nn.Module):
         out = self.dropout(lstm_out)
 
         #fully connected layers
-        out=self.fc1(out)
-        out=self.dropout(out)
-        out=self.fc2(out)
-        out=self.dropout(out)
-        out=self.fc3(out)
+        out = self.fc1(out)
+        out = self.dropout(out)
+        out = self.fc2(out)
+        out = self.dropout(out)
+        out = self.fc3(out)
+
+        #relu layer
+        out = self.relu(out)
 
         return out, hidden
 

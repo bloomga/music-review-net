@@ -84,6 +84,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     
     #epoch loop
     for e in range(epochs):
+        print("Epoch: {}/{}...".format(e+1, epochs))
         #init zeroed hidden state
         hidden = net.init_hidden_state(batch_size, train_on_gpu)
 
@@ -114,7 +115,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             optimizer.step()
 
             #calculate loss stats
-            if step_counter % 20 == 0: #currently lower print rate for testing
+            if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
                 #CODE find training r^2, similar method to loss
                 #CODE find training rmse (square root of loss)
                 #CODE find largest and smallest (absolute value) residuals from outputs
