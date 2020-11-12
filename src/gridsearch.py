@@ -98,9 +98,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
         val_fold_x = train_x[val_index]
         train_fold_y = train_y[train_index]
         val_fold_y = train_y[val_index]
-
-        print(len(train_fold_x))
-        print(len(val_fold_x))   
+   
         #create tensors and dataloaders
        
         train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
@@ -134,8 +132,11 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
-                print(output)
-                print("dfsdfa")
+                print("outputs")
+                print([a.squeeze().tolist() for a in output])
+                print("targets")
+                print(targets.tolist())
+                
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
                 loss.backward()
@@ -189,7 +190,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
             val_r2 = np.mean(val_r2s)
             val_rmse = np.mean(val_rmses)
             net.train() #set back to training mode
-        
+            
             print("Epoch: {}/{}...".format(e+1, epochs),
                   "Val Loss: {:.6f}...".format(val_loss),
                   "Val R^2: {}...".format(val_r2),
