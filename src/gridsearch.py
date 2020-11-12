@@ -135,8 +135,9 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
                 print(output)
-                print(output.detach().numpy())
-                print(output.to_list())
+                print(output.detach().numpy().shape)
+                print(output.to_list().shape)
+                print([element.item() for element in output.flatten()].shape)
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
                 loss.backward()
