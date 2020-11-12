@@ -26,10 +26,10 @@ std_str = "Preprocessed"
 if standardized:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)[:2000]
+    scores = json.load(fp)[:5000]
     scores = scale(scores)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)[:2000]
+    reviews = json.load(fp)[:5000]
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
@@ -44,7 +44,7 @@ input_size = 400
 hidden_size = 256
 num_rec_layers = 2
 dropout = 0.5
-learning_rate = 0.0005
+learning_rate = 0.001 #0.0005
 lin_layers = 3 #hackish
 
 
@@ -146,7 +146,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
 
             #calculate loss stats
-            if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
+            if step_counter % 50 == 0: #currently lower print rate for testing (turn off for grid search)
                 r2 = r2_score(targets.tolist(), output.tolist())
                 rmse = np.sqrt(loss.item())
                 maxResidual, minResidual = residuals(output, targets)
