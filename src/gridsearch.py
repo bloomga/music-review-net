@@ -134,6 +134,8 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 output, hidden = net(inputs, hidden)
                 print("outputs")
                 print(output.squeeze().shape)
+                print("targets")
+                print(targets.shape)
                 
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
