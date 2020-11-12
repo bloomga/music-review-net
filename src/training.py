@@ -159,48 +159,49 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         maxFinal = 0
         minFinal = 10
 
-        net.eval() #put net in eval mode so it doesnt learn from the validation data
-        for inputs, targets in val_loader:
+        with torch.no_grad():
+            net.eval() #put net in eval mode so it doesnt learn from the validation data
+            for inputs, targets in val_loader:
 
-            inputs = inputs.to(device).long()
-            targets = targets.to(device).long()
+                inputs = inputs.to(device).long()
+                targets = targets.to(device).long()
 
-            #create new hidden state variables
-            val_hidden = tuple([h.data for h in val_hidden])
+                #create new hidden state variables
+                val_hidden = tuple([h.data for h in val_hidden])
 
-            #get output and then calculate loss
-            output, val_hidden = net(inputs, val_hidden)
-            val_loss = criterion(output, targets)
+                #get output and then calculate loss
+                output, val_hidden = net(inputs, val_hidden)
+                val_loss = criterion(output, targets)
 
-            val_losses.append(val_loss.item())
+                val_losses.append(val_loss.item())
 
-            val_r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()]))
-            val_r2s.append(val_r2)
+                val_r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()]))
+                val_r2s.append(val_r2)
 
-            maxResidualVal, minResidualVal = residuals(output, targets)
+                maxResidualVal, minResidualVal = residuals(output, targets)
 
-            if minFinal < minResidualVal:
-                minFinal = minResidualVal
+                if minFinal < minResidualVal:
+                    minFinal = minResidualVal
 
-            elif maxFinal< maxResidualVal:
-                maxFinal = maxResidualVal
-
-
-
-
-            val_rmse = np.sqrt(val_loss.item())
-            val_rmses.append(val_rmse)
+                elif maxFinal< maxResidualVal:
+                    maxFinal = maxResidualVal
 
 
-        val_loss = np.mean(val_losses)
-        net.train() #set back to training mode
-        #CODE find largest and smallest (absolute value) residual from all outputs vs targets
-        #CODE printing these
 
-        print("Epoch: {}/{}...".format(e+1, epochs),
-              "Val Loss: {:.6f}...".format(val_loss),
-              "Val R^2: {}...".format(val_r2),
-              "Val RMSE: {}...".format(val_rmse)))
+
+                val_rmse = np.sqrt(val_loss.item())
+                val_rmses.append(val_rmse)
+
+
+            val_loss = np.mean(val_losses)
+            net.train() #set back to training mode
+            #CODE find largest and smallest (absolute value) residual from all outputs vs targets
+            #CODE printing these
+
+            print("Epoch: {}/{}...".format(e+1, epochs),
+                  "Val Loss: {:.6f}...".format(val_loss),
+                  "Val R^2: {}...".format(val_r2),
+                  "Val RMSE: {}...".format(val_rmse)))
 
 
     #CODE save final val stats for each fold in lists

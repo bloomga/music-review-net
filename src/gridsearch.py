@@ -133,14 +133,12 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
                 print("outputs")
-                print([a.squeeze().tolist() for a in (output.detach().numpy())])
-                print("targets")
-                print(targets.tolist())
+                print(output.squeeze().shape)
                 
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
                 loss.backward()
-
+                
                 #built-in function to help prevent the exploding gradient problem that is common in RNN's
                 nn.utils.clip_grad_norm_(net.parameters(), 5)
 
@@ -149,7 +147,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #calculate loss stats
                 if(False and step_counter % 20 == 0): #turned off training prining for gridsearch
-                    r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()])
+                    r2 = r2_score(targets.tolist(), [element.item() for element in output.flatten()])
                     rmse = np.sqrt(loss.item())
                     print("Fold: {}/{}...".format(fold+1, k), 
                           "Epoch: {}/{}...".format(e+1, epochs),
@@ -166,35 +164,36 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
             val_r2s = list()
             val_rmses = list()
 
-            net.eval() #put net in eval mode so it doesnt learn from the validation data
-            for inputs, targets in val_loader:
+            with torch.no_grad():
+                net.eval() #put net in eval mode so it doesnt learn from the validation data
+                for inputs, targets in val_loader:
 
-                inputs = inputs.to(device).long()
-                targets = targets.to(device).long()
+                    inputs = inputs.to(device).long()
+                    targets = targets.to(device).long()
 
-                #create new hidden state variables
-                val_hidden = tuple([h.data for h in val_hidden])
+                    #create new hidden state variables
+                    val_hidden = tuple([h.data for h in val_hidden])
 
-                #get output and then calculate loss
-                output, val_hidden = net(inputs, val_hidden)
-                val_loss = criterion(output, targets)
-                val_losses.append(val_loss.item())
+                    #get output and then calculate loss
+                    output, val_hidden = net(inputs, val_hidden)
+                    val_loss = criterion(output, targets)
+                    val_losses.append(val_loss.item())
 
-                val_r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()])
-                val_r2s.append(val_r2)
+                    val_r2 = r2_score(targets.tolist(), [element.item() for element in output.flatten()])
+                    val_r2s.append(val_r2)
 
-                val_rmse = np.sqrt(val_loss.item())
-                val_rmses.append(val_rmse)
+                    val_rmse = np.sqrt(val_loss.item())
+                    val_rmses.append(val_rmse)
 
-            val_loss = np.mean(val_losses)
-            val_r2 = np.mean(val_r2s)
-            val_rmse = np.mean(val_rmses)
-            net.train() #set back to training mode
-            
-            print("Epoch: {}/{}...".format(e+1, epochs),
-                  "Val Loss: {:.6f}...".format(val_loss),
-                  "Val R^2: {}...".format(val_r2),
-                  "Val RMSE: {}...".format(val_rmse))
+                val_loss = np.mean(val_losses)
+                val_r2 = np.mean(val_r2s)
+                val_rmse = np.mean(val_rmses)
+                net.train() #set back to training mode
+                
+                print("Epoch: {}/{}...".format(e+1, epochs),
+                      "Val Loss: {:.6f}...".format(val_loss),
+                      "Val R^2: {}...".format(val_r2),
+                      "Val RMSE: {}...".format(val_rmse))
         
         final_val_losses.append(val_loss)
         final_val_r2s.append(val_r2)
