@@ -25,9 +25,9 @@ std_str = "Preprocessed"
 if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)
+    scores = json.load(fp)[:1000] #for testing
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)
+    reviews = json.load(fp)[:1000] #for testing
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
@@ -134,6 +134,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
+                print(output.shape)
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
                 loss.backward()
