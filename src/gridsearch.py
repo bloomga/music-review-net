@@ -9,6 +9,7 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
+from sklearn.metrics import r2_score
 import sys
 
 #CODE make this all into a function that accepts hyper-parameter settings 

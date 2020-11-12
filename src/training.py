@@ -6,7 +6,7 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
-from sklearn.metrcs import r2_score
+from sklearn.metrics import r2_score
 import sys
 
 
