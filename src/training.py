@@ -12,11 +12,12 @@ import sys
 
 #fname = str(sys.argv[1])
 fname = "metacritic_reviews"
-standardized = 0
+#if we want to use standardized dataset or not
+standardized = False
 
 #load reviews, scores, and encoding dict
 std_str = "Preprocessed"
-if standardized == 1:
+if standardized:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
     scores = json.load(fp)
@@ -99,7 +100,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     train_loader = DataLoader(train, batch_size = batch_size, shuffle = True, drop_last = True)
     val_loader = DataLoader(validate, batch_size = batch_size, shuffle = True, drop_last = True)
 
-
+    
     epochs = 4 #we will adjust this after training, see how many epochs before loss stops decreasing
     step_counter = 0
 
@@ -114,7 +115,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             step_counter += 1
 
             inputs = inputs.to(device).long()
-            targets = targets.to(device).long()
+            targets = targets.to(device)
 
             #create new hidden state variables
             hidden = tuple([h.data for h in hidden])

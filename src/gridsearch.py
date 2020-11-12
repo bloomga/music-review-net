@@ -18,11 +18,12 @@ import sys
 
 #fname = str(sys.argv[1])
 fname = "metacritic_reviews"
-standardized = 0 
+#if we want to use standardized dataset
+standardized = False
 
 #load reviews, scores, and encoding dict
 std_str = "Preprocessed"
-if standardized == 1:
+if standardized:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
     scores = json.load(fp)
