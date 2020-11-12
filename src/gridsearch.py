@@ -77,7 +77,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     final_val_rmses = list()
 
     for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
-        print("Fold: {}/{}...".format(fold, k))
+        print("Fold: {}/{}...".format(fold+1, k))
         #initialize model
         if lin_layers == 2:
             net = lstmModel2.MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
@@ -133,6 +133,10 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
+
+                out = net(inputs)
+                print(out.shape)
+                print(output.data[:,0].squeeze().tolist())
                 
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
