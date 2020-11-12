@@ -127,6 +127,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                 #CODE find training r^2, similar method to loss
                 r2 = r2_score(targets, output)
                 #CODE find training rmse (square root of loss)
+                rmse = np.sqrt(loss.item())
                 #CODE find largest and smallest (absolute value) residuals from outputs
                 #vs targets
                 #CODE print all of these
@@ -134,7 +135,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()),
-                      "R^2: {}...".format(r2))
+                      "R^2: {}...".format(r2),
+                      "RMSE: {}...".format(rmse))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
@@ -144,6 +146,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         val_hidden = net.init_hidden_state(batch_size, train_on_gpu)
         val_losses = list()
         val_r2s = list()
+        val_rmses = list()
 
         net.eval() #put net in eval mode so it doesnt learn from the validation data
         for inputs, targets in val_loader:
@@ -162,8 +165,12 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             val_r2 = r2_score(targets, output)
             val_r2s.append(val_r2)
 
+            val_rmse = np.sqrt(val_loss.item())
+            val_rmses.append(val_rmse)
+
         val_loss = np.mean(val_losses)
         val_r2 = np.mean(val_r2s)
+        val_rmse = np.mean(val_rmses)
         net.train() #set back to training mode
         #CODE find val r^2, similar method to val_loss
         #CODE find val rmse (just square root of loss)
@@ -173,7 +180,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss),
-              "Val R^2: {}...".format(val_r2))
+              "Val R^2: {}...".format(val_r2),
+              "Val RMSE: {}...".format(val_rmse))
     
         #for graphing later
         #CODE save these val stats all in a list of lists for the last fold along with epoch
