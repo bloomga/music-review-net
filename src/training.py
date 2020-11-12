@@ -7,6 +7,7 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score
+from sklearn.preprocessing import MinMaxScaler
 import sys
 
 
@@ -20,6 +21,8 @@ if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
     scores = json.load(fp)
+    scaler = MinMaxScaler(feature_range=(0,1))
+    scores = scaler.fit_transform(scores)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
     reviews = json.load(fp)
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
@@ -42,7 +45,7 @@ lin_layers = 3 #hackish
 
 def residuals(output, targets):
     targets = targets.tolist()
-    output = output.data[:,-1].squeeze().tolist()
+    output = output.tolist()
     differences = []
 
     for i in range(len(output)):
@@ -123,8 +126,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             #get output of music lstm
             output, hidden = net(inputs, hidden)
-            print(output.data[:,-1].squeeze().tolist())
-            print(output.view(batch_size, -1)[:,-1])
+            output = output.view(batch_size, -1)[:,-1]
 
             #calculate loss and backwards propogate
             loss = criterion(output, targets)
@@ -140,7 +142,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             #calculate loss stats
             if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
-                r2 = r2_score(targets.tolist(), output.data[:,-1].squeeze().tolist())
+                r2 = r2_score(targets.tolist(), output.tolist())
                 rmse = np.sqrt(loss.item())
                 maxResidual, minResidual = residuals(output, targets)
                 print("Fold: {}/{}...".format(fold+1, k),
@@ -176,11 +178,12 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
                 #get output and then calculate loss
                 output, val_hidden = net(inputs, val_hidden)
+                output = output.view(batch_size, -1)[:,-1]
                 val_loss = criterion(output, targets)
 
                 val_losses.append(val_loss.item())
 
-                val_r2 = r2_score(targets.tolist(), output.data[:,-1].squeeze().tolist())
+                val_r2 = r2_score(targets.tolist(), output.tolist())
                 val_r2s.append(val_r2)
 
                 maxResidualVal, minResidualVal = residuals(output, targets)
