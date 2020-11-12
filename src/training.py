@@ -167,12 +167,16 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss))
-    #CODE save final val stats for each fold in lists
+    
         #for graphing later
         #CODE save these val stats all in a list of lists for the last fold along with epoch
-
+        
+    #CODE save final val stats for each fold in lists
+    final_val_losses.append(val_loss)
+    final_val_r2s.append(val_r2)
+    final_val_rmses.append(val_rmse)
 #print out final validation stats (averages over cross validation)
-print("Final validation stats after cross validation is done)
+print("Final validation stats after cross validation is done")
 print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
 print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
 print("Val RMSE: {:.6f}...".format(np.mean(final_val_rmses)))
