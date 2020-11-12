@@ -6,15 +6,13 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
+from sklearn.metrcs import r2_score
 import sys
-
-#CODE make this all into a function that accepts hyper-parameter settings 
-#and loops over all options. put in new file called grid search.
 
 
 #fname = str(sys.argv[1])
 fname = "metacritic_reviews"
-standardized = 0 
+standardized = 0
 
 #load reviews, scores, and encoding dict
 std_str = "Preprocessed"
@@ -39,6 +37,19 @@ hidden_size = 256
 num_rec_layers = 2
 dropout = 0.5
 learning_rate = 0.0005
+lin_layers = 3 #hackish
+
+
+def residuals(output, target):
+    differences = []
+
+    for i in range(len(output)):
+        difference = output[i] - target[i]
+        differences.append(abs(difference))
+
+    return max(differences), min(differences)
+
+
 
 #loss function MSE
 def MSE(yhat, y):
@@ -54,8 +65,8 @@ train_x = np.array(reviews)
 train_y = np.array(scores)
 
 #create k-folds and loop
-k = 10 
-kfold = KFold(n_splits=k) 
+k = 10
+kfold = KFold(n_splits=k)
 
 final_val_r2s = list()
 final_val_losses = list()
@@ -69,8 +80,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
 
     #put into training mode
-    net.train() 
-    
+    net.train()
+
     #divide up folds
     train_fold_x = train_x[train_index]
     val_fold_x = train_x[val_index]
@@ -78,7 +89,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     val_fold_y = train_y[val_index]
 
     print(len(train_fold_x))
-    print(len(val_fold_x))   
+    print(len(val_fold_x))
     #create tensors and dataloaders
     batch_size = 25
     train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
@@ -89,7 +100,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
     epochs = 4 #we will adjust this after training, see how many epochs before loss stops decreasing
     step_counter = 0
-    
+
     #epoch loop
     for e in range(epochs):
         print("Epoch: {}/{}...".format(e+1, epochs))
@@ -99,10 +110,10 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #batch loop
         for inputs, targets in train_loader:
             step_counter += 1
-            
+
             inputs = inputs.to(device).long()
             targets = targets.to(device).long()
-            
+
             #create new hidden state variables
             hidden = tuple([h.data for h in hidden])
 
@@ -122,25 +133,31 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             #update parameters
             optimizer.step()
 
+
+
             #calculate loss stats
             if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
-                #CODE find training r^2, similar method to loss
-                #CODE find training rmse (square root of loss)
-                #CODE find largest and smallest (absolute value) residuals from outputs
-                #vs targets
-                #CODE print all of these
-                print("Fold: {}/{}...".format(fold+1, k), 
+                r2 = r2_score(targets, output)
+                rmse = np.sqrt(loss.item())
+                maxResidual, minResidual = residuals(output, targets)
+                print("Fold: {}/{}...".format(fold+1, k),
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
-                      "Loss: {:.6f}...".format(loss.item()))
+                      "Loss: {:.6f}...".format(loss.item()),
+                      "R^2: {}...".format(r2),
+                      "RMSE: {}...".format(rmse)))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
-                  
+
         #calculate validation loss
         #first init a new zeroed hidden state
         val_hidden = net.init_hidden_state(batch_size, train_on_gpu)
         val_losses = list()
+        val_r2s = list()
+        val_rmses = list()
+        maxFinal = list()
+        minFinal = list()
 
         net.eval() #put net in eval mode so it doesnt learn from the validation data
         for inputs, targets in val_loader:
@@ -157,27 +174,43 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             val_losses.append(val_loss.item())
 
+            val_r2 = r2_score(targets, output)
+            val_r2s.append(val_r2)
+            maxResidualVal, minResidualVal = residuals(output, targets)
+
+
+            val_rmse = np.sqrt(val_loss.item())
+            val_rmses.append(val_rmse)
+
+
         val_loss = np.mean(val_losses)
         net.train() #set back to training mode
-        #CODE find val r^2, similar method to val_loss
-        #CODE find val rmse (just square root of loss)
         #CODE find largest and smallest (absolute value) residual from all outputs vs targets
-        #not just the last data load 
         #CODE printing these
-    
+
         print("Epoch: {}/{}...".format(e+1, epochs),
-              "Val Loss: {:.6f}...".format(val_loss))
+              "Val Loss: {:.6f}...".format(val_loss),
+              "Val R^2: {}...".format(val_r2),
+              "Val RMSE: {}...".format(val_rmse)))
+
+
     #CODE save final val stats for each fold in lists
-        #for graphing later
-        #CODE save these val stats all in a list of lists for the last fold along with epoch
+    final_val_losses.append(val_loss)
+    final_val_r2s.append(val_r2)
+    final_val_rmses.append(val_rmse)
 
 #print out final validation stats (averages over cross validation)
-print("Final validation stats after cross validation is done)
+print("Final validation stats after cross validation is done")
+print("Learning Rate: {:.6f}...".format(learning_rate))
+print("Number of Epochs: {:.6f}...".format(epochs))
+print("Batch size: {:.6f}}...".format(batch_size))
+print("Number of LSTM Layers: {:.6f}}...".format(num_rec_layers))
+print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
 print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
 print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
 print("Val RMSE: {:.6f}...".format(np.mean(final_val_rmses)))
 print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
-   
+
 
 #after we finish tuning
 #graphs for later (think zooming in on 1 fold)
@@ -186,4 +219,4 @@ print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 #CODE graph  Val Loss, val RMSE, val r^2, and min/max residuals vs epoch for a singular
 #fold and its accompanying model
 #CODE graph scatter plot of some outputs and targets together
-#do this for validation in a singular fold 
+#do this for validation in a singular fold
