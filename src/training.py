@@ -149,8 +149,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                       "Loss: {:.6f}...".format(loss.item()),
                       "R^2: {:.6f}...".format(r2),
                       "RMSE: {:.6f}...".format(rmse),
-                      "Max Residual: {:.6f)...".format(maxResidual),
-                      "Min Residual: {:.6f)...".format(minResidual))
+                      "Max Residual: {:.6f}...".format(maxResidual),
+                      "Min Residual: {:.6f}...".format(minResidual))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
@@ -208,8 +208,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                   "Val Loss: {:.6f}...".format(val_loss),
                   "Val R^2: {}...".format(val_r2),
                   "Val RMSE: {}...".format(val_rmse),
-                  "Max Val Residual: {:.6f)...".format(maxFinal),
-                  "Min Val Residual: {:.6f)...".format(minFinal))
+                  "Max Val Residual: {:.6f}...".format(maxFinal),
+                  "Min Val Residual: {:.6f"}...".format(minFinal))
 
 
     #CODE save final val stats for each fold in lists
