@@ -172,7 +172,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
                 #get output and then calculate loss
                 output, val_hidden = net(inputs, val_hidden)
-                val_loss = criterion(output), targets)
+                val_loss = criterion(output, targets)
 
                 val_losses.append(val_loss.item())
 
