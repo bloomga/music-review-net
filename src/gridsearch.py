@@ -21,14 +21,19 @@ fname = "metacritic_reviews"
 #if we want to use standardized dataset
 standardized = True
 
+def scale(scores):
+    s_min = min(scores)
+    s_max = max(scores)
+    scaled = [( (((x-s_min)/(s_max-s_min))*(2)) -1) for x in scores]
+    return scaled
+
 #load reviews, scores, and encoding dict
 std_str = "Preprocessed"
 if standardized:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
     scores = json.load(fp)
-    if standardized == False:
-        scores = [((x/5)-1) for x in scores]
+    scores = scale(scores)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
     reviews = json.load(fp) 
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
