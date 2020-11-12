@@ -146,7 +146,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                       "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()),
                       "R^2: {}...".format(r2),
-                      "RMSE: {}...".format(rmse)))
+                      "RMSE: {}...".format(rmse))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
@@ -202,7 +202,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             print("Epoch: {}/{}...".format(e+1, epochs),
                   "Val Loss: {:.6f}...".format(val_loss),
                   "Val R^2: {}...".format(val_r2),
-                  "Val RMSE: {}...".format(val_rmse)))
+                  "Val RMSE: {}...".format(val_rmse))
 
 
     #CODE save final val stats for each fold in lists
