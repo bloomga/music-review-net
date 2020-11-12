@@ -57,6 +57,10 @@ train_y = np.array(scores)
 k = 10 
 kfold = KFold(n_splits=k) 
 
+final_val_r2s = list()
+final_val_losses = list()
+final_val_rmses = list()
+
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     #initialize model
     net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
@@ -160,18 +164,20 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #CODE find largest and smallest (absolute value) residual from all outputs vs targets
         #not just the last data load 
         #CODE printing these
-        #CODE save final val stats for each fold in lists
+    
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss))
-
+    #CODE save final val stats for each fold in lists
         #for graphing later
         #CODE save these val stats all in a list of lists for the last fold along with epoch
 
-#CODE generate final val loss, final val rmse, final val r^2 (means of list)
-#CODE print final Val Loss, final val rmse, final val r^2,
-#standard error as well
-#and its accompanying model (ie hyperparameters) 
-    
+#print out final validation stats (averages over cross validation)
+print("Final validation stats after cross validation is done)
+print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
+print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
+print("Val RMSE: {:.6f}...".format(np.mean(final_val_rmses)))
+print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
+   
 
 #after we finish tuning
 #graphs for later (think zooming in on 1 fold)
