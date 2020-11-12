@@ -25,9 +25,9 @@ std_str = "Preprocessed"
 if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)[:1000] #for testing
+    scores = json.load(fp)[:1000]
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)[:1000] #for testing
+    reviews = json.load(fp)[:1000] 
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
@@ -132,10 +132,6 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
-                print("outputs")
-                print(output.data[:,0].squeeze().tolist())
-                print("targets")
-                print(targets)
                 
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
@@ -149,7 +145,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #calculate loss stats
                 if(False and step_counter % 20 == 0): #turned off training prining for gridsearch
-                    r2 = r2_score(targets.tolist(), output.data[:,0])
+                    r2 = r2_score(targets.tolist(), output.data[:,0].squeeze().tolist())
                     rmse = np.sqrt(loss.item())
                     print("Fold: {}/{}...".format(fold+1, k), 
                           "Epoch: {}/{}...".format(e+1, epochs),
@@ -181,7 +177,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                     val_loss = criterion(output, targets)
                     val_losses.append(val_loss.item())
 
-                    val_r2 = r2_score(targets.tolist(), [element.item() for element in output.flatten()])
+                    val_r2 = r2_score(targets.tolist(), output.data[:,0].squeeze().tolist())
                     val_r2s.append(val_r2)
 
                     val_rmse = np.sqrt(val_loss.item())
