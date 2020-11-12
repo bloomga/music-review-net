@@ -146,7 +146,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #calculate loss stats
                 if(False and step_counter % 20 == 0): #turned off training prining for gridsearch
-                    r2 = r2_score([element.item() for element in target.flatten()], [element.item() for element in output.flatten()])
+                    r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()])
                     rmse = np.sqrt(loss.item())
                     print("Fold: {}/{}...".format(fold+1, k), 
                           "Epoch: {}/{}...".format(e+1, epochs),
