@@ -50,8 +50,8 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     
     print("Learning Rate: {:.6f}...".format(learning_rate))
     print("Number of Epochs: {:.6f}...".format(epochs))
-    print("Batch size: {:.6f}}...".format(batch_size))
-    print("Number of LSTM Layers: {:.6f}}...".format(num_rec_layers))
+    print("Batch size: {:.6f}...".format(batch_size))
+    print("Number of LSTM Layers: {:.6f}...".format(num_rec_layers))
     print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
 
     #loss function MSE
