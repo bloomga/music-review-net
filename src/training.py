@@ -127,8 +127,6 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             #get output of music lstm
             output, hidden = net(inputs, hidden)
             output = output.view(batch_size, -1)[:,-1]
-            print(output)
-            print(targets)
 
             #calculate loss and backwards propogate
             loss = criterion(output, targets)
