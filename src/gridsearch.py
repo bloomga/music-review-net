@@ -177,7 +177,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 val_loss = criterion(output, targets)
                 val_losses.append(val_loss.item())
 
-                val_r2 = r2_score([element.item() for element in target.flatten()], [element.item() for element in output.flatten()])
+                val_r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()])
                 val_r2s.append(val_r2)
 
                 val_rmse = np.sqrt(val_loss.item())
