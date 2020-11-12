@@ -6,6 +6,7 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
+from sklearn.metrcs import r2_score
 import sys
 
 
@@ -143,22 +144,15 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             #calculate loss stats
             if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
-                #CODE find training r^2, similar method to loss
-                #CODE find training rmse (square root of loss)
                 r2 = r2_score(targets, output)
-
                 rmse = np.sqrt(loss.item())
-                #CODE find largest and smallest (absolute value) residuals from outputs
                 maxResidual, minResidual = residuals(output, targets)
-                #vs targets
-                #CODE print all of these
                 print("Fold: {}/{}...".format(fold+1, k),
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
-                       "Loss: {:.6f}...".format(loss.item()),
+                      "Loss: {:.6f}...".format(loss.item()),
                       "R^2: {}...".format(r2),
-                      "RMSE: {}...".format(rmse))
-                      "Loss: {:.6f}...".format(loss.item()))
+                      "RMSE: {}...".format(rmse)))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
@@ -194,21 +188,17 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             val_rmse = np.sqrt(val_loss.item())
             val_rmses.append(val_rmse)
-            val_losses.append(val_loss.item())
+
 
         val_loss = np.mean(val_losses)
         net.train() #set back to training mode
-        #CODE find val r^2, similar method to val_loss
-        #CODE find val rmse (just square root of loss)
         #CODE find largest and smallest (absolute value) residual from all outputs vs targets
-        #not just the last data load
         #CODE printing these
 
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss),
               "Val R^2: {}...".format(val_r2),
-              "Val RMSE: {}...".format(val_rmse))
-              "Val Loss: {:.6f}...".format(val_loss))
+              "Val RMSE: {}...".format(val_rmse)))
 
 
     #CODE save final val stats for each fold in lists
@@ -223,12 +213,6 @@ print("Number of Epochs: {:.6f}...".format(epochs))
 print("Batch size: {:.6f}}...".format(batch_size))
 print("Number of LSTM Layers: {:.6f}}...".format(num_rec_layers))
 print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
-    #CODE save final val stats for each fold in lists
-        #for graphing later
-        #CODE save these val stats all in a list of lists for the last fold along with epoch
-
-#print out final validation stats (averages over cross validation)
-print("Final validation stats after cross validation is done)
 print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
 print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
 print("Val RMSE: {:.6f}...".format(np.mean(final_val_rmses)))
