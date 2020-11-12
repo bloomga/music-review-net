@@ -10,6 +10,7 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score
+from sklearn.preprocessing import MinMaxScaler
 import sys
 
 #CODE make this all into a function that accepts hyper-parameter settings 
@@ -25,9 +26,11 @@ std_str = "Preprocessed"
 if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)[:1000]
+    scores = json.load(fp)
+    scaler = MinMaxScaler(feature_range=(0,1))
+    scores = scaler.fit_transform(scores)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)[:1000] 
+    reviews = json.load(fp) 
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
@@ -133,6 +136,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
+                output = output.view(batch_size, -1)[:,-1]
         
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
@@ -146,7 +150,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #calculate loss stats
                 if(False and step_counter % 20 == 0): #turned off training prining for gridsearch
-                    r2 = r2_score(targets.tolist(), output.data[:,-1].squeeze().tolist())
+                    r2 = r2_score(targets.tolist(), output.tolist())
                     rmse = np.sqrt(loss.item())
                     print("Fold: {}/{}...".format(fold+1, k), 
                           "Epoch: {}/{}...".format(e+1, epochs),
@@ -175,10 +179,11 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                     #get output and then calculate loss
                     output, val_hidden = net(inputs, val_hidden)
+                    output = output.view(batch_size, -1)[:,-1]
                     val_loss = criterion(output, targets)
                     val_losses.append(val_loss.item())
 
-                    val_r2 = r2_score(targets.tolist(), output.data[:,-1].squeeze().tolist())
+                    val_r2 = r2_score(targets.tolist(), output.tolist())
                     val_r2s.append(val_r2)
 
                     val_rmse = np.sqrt(val_loss.item())
