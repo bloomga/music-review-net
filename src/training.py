@@ -155,15 +155,17 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #CODE find val rmse (just square root of loss)
         #CODE find largest and smallest (absolute value) residual from all outputs vs targets
         #not just the last data load 
-        #CODE printing these 
+        #CODE printing these
+        #CODE save final val stats for each fold in lists
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss))
 
         #for graphing later
         #CODE save these val stats all in a list of lists for the last fold along with epoch
 
-    #CODE print final Val Loss, final val rmse, final val r^2, and final min/max residuals
-    #and its accompanying model (ie hyperparameters) 
+#CODE generate final val loss, final val rmse, final val r^2 (means of list)
+#CODE print final Val Loss, final val rmse, final val r^2, 
+#and its accompanying model (ie hyperparameters) 
     
 
 #after we finish tuning
