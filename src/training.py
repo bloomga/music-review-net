@@ -13,7 +13,7 @@ import sys
 #fname = str(sys.argv[1])
 fname = "metacritic_reviews"
 #if we want to use standardized dataset or not
-standardized = False
+standardized = True
 
 #load reviews, scores, and encoding dict
 std_str = "Preprocessed"
