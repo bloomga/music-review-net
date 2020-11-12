@@ -75,6 +75,7 @@ final_val_losses = list()
 final_val_rmses = list()
 
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
+    print("Fold: {}/{}...".format(fold, k))
     #initialize model
     net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
 

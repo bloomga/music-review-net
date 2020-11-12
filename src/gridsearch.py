@@ -178,6 +178,10 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                     val_loss = criterion(output, targets)
                     val_losses.append(val_loss.item())
 
+                    out = net(inputs)
+                    print(out.shape)
+                    print(output.data[:,0].squeeze().tolist())
+
                     val_r2 = r2_score(targets.tolist(), output.data[:,0].squeeze().tolist())
                     val_r2s.append(val_r2)
 
