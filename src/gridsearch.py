@@ -124,7 +124,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 
                 inputs = inputs.to(device).long()
                 targets = targets.to(device).long()
-                
+                print(targets)
                 #create new hidden state variables
                 hidden = tuple([h.data for h in hidden])
 
