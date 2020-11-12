@@ -209,7 +209,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                   "Val R^2: {}...".format(val_r2),
                   "Val RMSE: {}...".format(val_rmse),
                   "Max Val Residual: {:.6f}...".format(maxFinal),
-                  "Min Val Residual: {:.6f"}...".format(minFinal))
+                  "Min Val Residual: {:.6f}...".format(minFinal))
 
 
     #CODE save final val stats for each fold in lists
