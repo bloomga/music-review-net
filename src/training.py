@@ -123,6 +123,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             #get output of music lstm
             output, hidden = net(inputs, hidden)
+            print(output.data[:,-1].squeeze().tolist())
 
             #calculate loss and backwards propogate
             loss = criterion(output, targets)
@@ -145,8 +146,10 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()),
-                      "R^2: {}...".format(r2),
-                      "RMSE: {}...".format(rmse))
+                      "R^2: {:.6f}...".format(r2),
+                      "RMSE: {:.6f}...".format(rmse),
+                      "Max Residual: {:.6f)...".format(maxResidual),
+                      "Min Residual: {:.6f)...".format(minResidual))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
@@ -202,7 +205,9 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             print("Epoch: {}/{}...".format(e+1, epochs),
                   "Val Loss: {:.6f}...".format(val_loss),
                   "Val R^2: {}...".format(val_r2),
-                  "Val RMSE: {}...".format(val_rmse))
+                  "Val RMSE: {}...".format(val_rmse),
+                  "Max Val Residual: {:.6f)...".format(maxFinal),
+                  "Min Val Residual: {:.6f)...".format(minFinal))
 
 
     #CODE save final val stats for each fold in lists
