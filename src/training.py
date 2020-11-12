@@ -41,7 +41,10 @@ dropout = 0.5
 learning_rate = 0.0005
 
 #loss function MSE
-criterion = nn.MSELoss()
+def MSE(yhat, y):
+    return torch.mean((yhat-y)**2)
+
+criterion = MSE
 
 # check if CUDA is available
 train_on_gpu = torch.cuda.is_available()
