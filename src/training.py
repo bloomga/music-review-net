@@ -7,7 +7,6 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score
-from sklearn.preprocessing import MinMaxScaler
 import sys
 
 
@@ -21,8 +20,7 @@ if standardized == 1:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
     scores = json.load(fp)
-    scaler = MinMaxScaler(feature_range=(0,1))
-    scores = scaler.fit_transform(scores)
+    scores = [(x/10) for x in scores]
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
     reviews = json.load(fp)
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
