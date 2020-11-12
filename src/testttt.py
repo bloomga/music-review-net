@@ -7,7 +7,8 @@ fname = "metacritic_reviews"
 std_str = "Preprocessed"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
     scores = json.load(fp)[:25]
-    scores = [(x/10) for x in scores]
+    print(scores)
+    scores = [((x/5)-1) for x in scores]
     print(scores)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
     reviews = json.load(fp)[:25]
@@ -26,6 +27,5 @@ train_loader = DataLoader(train, batch_size = batch_size, shuffle = True, drop_l
 for inputs, targets in train_loader:
     targets = targets.to(device)
     print(targets)
-    print(inputs)
     inputs = inputs.to(device).long()
     print(inputs)
