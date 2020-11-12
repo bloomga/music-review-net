@@ -17,15 +17,15 @@ device = torch.device("cuda" if train_on_gpu else "cpu")
 
 train_x = np.array(reviews)
 train_y = np.array(scores)
-print(train_y)
+
 batch_size = 25
 train = TensorDataset(torch.FloatTensor(train_x), torch.FloatTensor(train_y))
-print(train)
+
 train_loader = DataLoader(train, batch_size = batch_size, shuffle = True, drop_last = True)
-print(train)
+
 for inputs, targets in train_loader:
-    print(targets)
     targets = targets.to(device)
     print(targets)
-    targets = targets.long()
-    print(targets)
+    print(inputs)
+    inputs = inputs.to(device).long()
+    print(inputs)

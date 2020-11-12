@@ -114,7 +114,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         for inputs, targets in train_loader:
             step_counter += 1
 
-            inputs = inputs.to(device)
+            inputs = inputs.to(device).long()
             targets = targets.to(device)
 
             #create new hidden state variables
@@ -170,7 +170,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             for inputs, targets in val_loader:
 
                 inputs = inputs.to(device).long()
-                targets = targets.to(device).long()
+                targets = targets.to(device)
 
                 #create new hidden state variables
                 val_hidden = tuple([h.data for h in val_hidden])

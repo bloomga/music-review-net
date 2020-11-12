@@ -123,7 +123,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
             for inputs, targets in train_loader:
                 step_counter += 1
                 
-                inputs = inputs.to(device)
+                inputs = inputs.to(device).long()
                 targets = targets.to(device)
                 
             
@@ -170,7 +170,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 net.eval() #put net in eval mode so it doesnt learn from the validation data
                 for inputs, targets in val_loader:
 
-                    inputs = inputs.to(device)
+                    inputs = inputs.to(device).long()
                     targets = targets.to(device)
 
                     #create new hidden state variables
