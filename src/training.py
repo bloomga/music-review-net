@@ -10,13 +10,6 @@ from sklearn.metrcs import r2_score
 import sys
 
 
-
-
-
-#CODE make this all into a function that accepts hyper-parameter settings
-#and loops over all options. put in new file called grid search.
-
-
 #fname = str(sys.argv[1])
 fname = "metacritic_reviews"
 standardized = 0

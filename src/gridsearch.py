@@ -34,6 +34,7 @@ print("dataset std deviation: " + str(np.std(scores)))
 print("dataset mean: " + str(np.mean(scores)))
 
 def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
+
     #set hyperparameters
     #using basic hyperparameters for now, these will be optimized later
     vocab_size = len(review_dict)+1 # +1 accounts for the 0 padding "word"
@@ -45,6 +46,12 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     learning_rate = learn_rate
     lin_layers = num_lin_layers
     batch_size = 25
+
+    print("Learning Rate: {:.6f}...".format(learning_rate))
+    print("Number of Epochs: {:.6f}...".format(epochs))
+    print("Batch size: {:.6f}}...".format(batch_size))
+    print("Number of LSTM Layers: {:.6f}}...".format(num_rec_layers))
+    print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
 
     #loss function MSE
     def MSE(yhat, y):
