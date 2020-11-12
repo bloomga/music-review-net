@@ -133,7 +133,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
                 print("outputs")
-                print(output.data[:,0])
+                print(output.data[:,0].tolist())
                 print("targets")
                 print(targets)
                 
@@ -149,7 +149,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #calculate loss stats
                 if(False and step_counter % 20 == 0): #turned off training prining for gridsearch
-                    r2 = r2_score(targets.tolist(), [element.item() for element in output.flatten()])
+                    r2 = r2_score(targets.tolist(), output.data[:,0])
                     rmse = np.sqrt(loss.item())
                     print("Fold: {}/{}...".format(fold+1, k), 
                           "Epoch: {}/{}...".format(e+1, epochs),
