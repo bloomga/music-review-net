@@ -26,10 +26,10 @@ std_str = "Preprocessed"
 if standardized:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)
+    scores = json.load(fp)[:2000]
     scores = scale(scores)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)
+    reviews = json.load(fp)[:2000]
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
