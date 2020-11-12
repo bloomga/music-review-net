@@ -156,8 +156,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         val_losses = list()
         val_r2s = list()
         val_rmses = list()
-        maxFinal = list()
-        minFinal = list()
+        maxFinal = 0
+        minFinal = 10
 
         net.eval() #put net in eval mode so it doesnt learn from the validation data
         for inputs, targets in val_loader:
@@ -176,7 +176,16 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             val_r2 = r2_score(targets, output)
             val_r2s.append(val_r2)
+
             maxResidualVal, minResidualVal = residuals(output, targets)
+
+            if minFinal < minResidualVal:
+                minFinal = minResidualVal
+
+            elif maxFinal< maxResidualVal:
+                maxFinal = maxResidualVal
+
+
 
 
             val_rmse = np.sqrt(val_loss.item())
