@@ -102,3 +102,10 @@ produce output file from metacrtitic scraper with same format as p4k dataset fil
 
 reminders:
 no need for sigmoid in regression
+
+NEXT CODING STEPS:
+1. Tune model
+ -get hyper params for metacritic dataset
+ -get hyper params for pitchfork dataset
+
+2.graphing at the end
