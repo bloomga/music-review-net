@@ -21,7 +21,7 @@ if standardized:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
     scores = json.load(fp)
-    if !standardized:
+    if standardized == False:
         scores = [((x/5)-1) for x in scores]
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
     reviews = json.load(fp)
