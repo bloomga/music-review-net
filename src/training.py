@@ -39,6 +39,7 @@ hidden_size = 256
 num_rec_layers = 2
 dropout = 0.5
 learning_rate = 0.0005
+lin_layers = 3 #hackish
 
 #loss function MSE
 def MSE(yhat, y):
@@ -190,8 +191,14 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     final_val_losses.append(val_loss)
     final_val_r2s.append(val_r2)
     final_val_rmses.append(val_rmse)
+
 #print out final validation stats (averages over cross validation)
 print("Final validation stats after cross validation is done")
+print("Learning Rate: {:.6f}...".format(learning_rate))
+print("Number of Epochs: {:.6f}...".format(epochs))
+print("Batch size: {:.6f}}...".format(batch_size))
+print("Number of LSTM Layers: {:.6f}}...".format(num_rec_layers))
+print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
 print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
 print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
 print("Val RMSE: {:.6f}...".format(np.mean(final_val_rmses)))
