@@ -13,7 +13,7 @@ import sys
 #fname = str(sys.argv[1])
 fname = "metacritic_reviews"
 #if we want to use standardized dataset or not
-standardized = True
+standardized = False
 
 def scale(scores):
     s_min = min(scores)
@@ -205,7 +205,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                 val_rmse = np.sqrt(val_loss.item())
                 val_rmses.append(val_rmse)
 
-
+            val_r2 = np.mean(val_r2s)
+            val_rmse = np.mean(val_rmses)
             val_loss = np.mean(val_losses)
             net.train() #set back to training mode
             #CODE find largest and smallest (absolute value) residual from all outputs vs targets
