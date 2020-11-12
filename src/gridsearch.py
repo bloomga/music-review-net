@@ -46,7 +46,8 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     learning_rate = learn_rate
     lin_layers = num_lin_layers
     batch_size = 25
-
+    epochs = eps 
+    
     print("Learning Rate: {:.6f}...".format(learning_rate))
     print("Number of Epochs: {:.6f}...".format(epochs))
     print("Batch size: {:.6f}}...".format(batch_size))
@@ -107,7 +108,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
         val_loader = DataLoader(validate, batch_size = batch_size, shuffle = True, drop_last = True)
 
 
-        epochs = eps #we will adjust this after training, see how many epochs before loss stops decreasing
+        
         step_counter = 0
         
         #epoch loop
