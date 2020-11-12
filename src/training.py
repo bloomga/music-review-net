@@ -125,6 +125,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             #calculate loss stats
             if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
                 #CODE find training r^2, similar method to loss
+                r2 = r2_score(targets, output)
                 #CODE find training rmse (square root of loss)
                 #CODE find largest and smallest (absolute value) residuals from outputs
                 #vs targets
@@ -132,7 +133,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                 print("Fold: {}/{}...".format(fold+1, k), 
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
-                      "Loss: {:.6f}...".format(loss.item()))
+                      "Loss: {:.6f}...".format(loss.item()),
+                      "R^2: {}...".format(r2))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
@@ -141,6 +143,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #first init a new zeroed hidden state
         val_hidden = net.init_hidden_state(batch_size, train_on_gpu)
         val_losses = list()
+        val_r2s = list()
 
         net.eval() #put net in eval mode so it doesnt learn from the validation data
         for inputs, targets in val_loader:
@@ -154,10 +157,13 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             #get output and then calculate loss
             output, val_hidden = net(inputs, val_hidden)
             val_loss = criterion(output, targets)
-
             val_losses.append(val_loss.item())
 
+            val_r2 = r2_score(targets, output)
+            val_r2s.append(val_r2)
+
         val_loss = np.mean(val_losses)
+        val_r2 = np.mean(val_r2s)
         net.train() #set back to training mode
         #CODE find val r^2, similar method to val_loss
         #CODE find val rmse (just square root of loss)
@@ -166,7 +172,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #CODE printing these
     
         print("Epoch: {}/{}...".format(e+1, epochs),
-              "Val Loss: {:.6f}...".format(val_loss))
+              "Val Loss: {:.6f}...".format(val_loss),
+              "Val R^2: {}...".format(val_r2))
     
         #for graphing later
         #CODE save these val stats all in a list of lists for the last fold along with epoch
