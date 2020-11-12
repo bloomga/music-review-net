@@ -27,7 +27,7 @@ class MusicLSTM(nn.Module):
         self.fc4 = nn.Linear(4, output_size)
 
         #final ReLU layer (we dont need values less than 0)
-        self.relu = nn.ReLU()
+        #self.relu = nn.ReLU()
 
 
     #feeds forward some input x and hidden state through the model to produce an output
@@ -55,7 +55,7 @@ class MusicLSTM(nn.Module):
         out = self.fc4(out)
 
         #relu layer
-        out = self.relu(out)
+        #out = self.relu(out)
 
         return out, hidden
 
