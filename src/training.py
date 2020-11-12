@@ -90,8 +90,6 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     train_fold_y = train_y[train_index]
     val_fold_y = train_y[val_index]
 
-    print(len(train_fold_x))
-    print(len(val_fold_x))
     #create tensors and dataloaders
     batch_size = 25
     train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
