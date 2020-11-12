@@ -38,6 +38,7 @@ input_size = 400
 hidden_size = 256
 num_rec_layers = 2
 dropout = 0.5
+learning_rate = 0.0005
 
 #loss function MSE
 criterion = nn.MSELoss()
@@ -58,7 +59,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
 
     #optmizer
-    optimizer = torch.optim.Adam(net.parameters(), lr=0.0005)
+    optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
 
     #put into training mode
     net.train() 
@@ -164,7 +165,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #CODE save these val stats all in a list of lists for the last fold along with epoch
 
 #CODE generate final val loss, final val rmse, final val r^2 (means of list)
-#CODE print final Val Loss, final val rmse, final val r^2, 
+#CODE print final Val Loss, final val rmse, final val r^2,
+#standard error as well
 #and its accompanying model (ie hyperparameters) 
     
 
