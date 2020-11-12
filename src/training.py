@@ -41,6 +41,8 @@ lin_layers = 3 #hackish
 
 
 def residuals(output, target):
+    output = output.detach().numpy()
+    target = target.detach().numpy()
     differences = []
 
     for i in range(len(output)):
@@ -137,7 +139,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             #calculate loss stats
             if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
-                r2 = r2_score(targets, output)
+                r2 = r2_score(targets.detach().numpy(), output.detach().numpy())
                 rmse = np.sqrt(loss.item())
                 maxResidual, minResidual = residuals(output, targets)
                 print("Fold: {}/{}...".format(fold+1, k),
@@ -174,7 +176,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             val_losses.append(val_loss.item())
 
-            val_r2 = r2_score(targets, output)
+            val_r2 = r2_score(targets.detach().numpy(), output.detach().numpy())
             val_r2s.append(val_r2)
 
             maxResidualVal, minResidualVal = residuals(output, targets)
