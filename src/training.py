@@ -11,7 +11,7 @@ import sys
 
 
 #fname = str(sys.argv[1])
-fname = "metacritic_reviews"
+fname = "p4k_reviews"
 #if we want to use standardized dataset or not
 standardized = False
 
@@ -26,10 +26,10 @@ std_str = "Preprocessed"
 if standardized:
     std_str = "Standardized"
 with open("obj/" + fname + std_str +'Scores.json', "r") as fp:
-    scores = json.load(fp)[:5000]
+    scores = json.load(fp)
     scores = scale(scores)
 with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
-    reviews = json.load(fp)[:5000]
+    reviews = json.load(fp)
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
@@ -44,7 +44,7 @@ input_size = 400
 hidden_size = 256
 num_rec_layers = 2
 dropout = 0.5
-learning_rate = 0.001 #0.0005
+learning_rate = 0.0005 #0.0005
 lin_layers = 3 #hackish
 
 
