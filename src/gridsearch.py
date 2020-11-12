@@ -133,9 +133,8 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
-                print(output)
-                print(output.data[:,0].squeeze().tolist())
-                print(output.data[:,-1].squeeze().tolist())
+                print(output.data[:,-1].squeeze().shape)
+                print(targets.shape)
 
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
@@ -149,7 +148,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #calculate loss stats
                 if(False and step_counter % 20 == 0): #turned off training prining for gridsearch
-                    r2 = r2_score(targets.tolist(), output.data[:,0].squeeze().tolist())
+                    r2 = r2_score(targets.tolist(), output.data[:,-1].squeeze().tolist())
                     rmse = np.sqrt(loss.item())
                     print("Fold: {}/{}...".format(fold+1, k), 
                           "Epoch: {}/{}...".format(e+1, epochs),
@@ -181,7 +180,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                     val_loss = criterion(output, targets)
                     val_losses.append(val_loss.item())
 
-                    val_r2 = r2_score(targets.tolist(), output.data[:,0].squeeze().tolist())
+                    val_r2 = r2_score(targets.tolist(), output.data[:,-1].squeeze().tolist())
                     val_r2s.append(val_r2)
 
                     val_rmse = np.sqrt(val_loss.item())
