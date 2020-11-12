@@ -41,8 +41,8 @@ lin_layers = 3 #hackish
 
 
 def residuals(output, target):
-    output = output.detach().numpy()
-    target = target.detach().numpy()
+    target = [element.item() for element in target.flatten()]
+    output = [element.item() for element in output.flatten()]
     differences = []
 
     for i in range(len(output)):
@@ -139,7 +139,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             #calculate loss stats
             if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
-                r2 = r2_score(targets.detach().numpy(), output.detach().numpy())
+                r2 = r2_score([element.item() for element in target.flatten()], [element.item() for element in output.flatten()])
                 rmse = np.sqrt(loss.item())
                 maxResidual, minResidual = residuals(output, targets)
                 print("Fold: {}/{}...".format(fold+1, k),
@@ -147,7 +147,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                       "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()),
                       "R^2: {}...".format(r2),
-                      "RMSE: {}...".format(rmse))
+                      "RMSE: {}...".format(rmse)))
 
                 #for graphing later
                 #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
@@ -176,7 +176,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             val_losses.append(val_loss.item())
 
-            val_r2 = r2_score(targets.detach().numpy(), output.detach().numpy())
+            val_r2 = r2_score([element.item() for element in target.flatten()], [element.item() for element in output.flatten()]))
             val_r2s.append(val_r2)
 
             maxResidualVal, minResidualVal = residuals(output, targets)
@@ -202,7 +202,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         print("Epoch: {}/{}...".format(e+1, epochs),
               "Val Loss: {:.6f}...".format(val_loss),
               "Val R^2: {}...".format(val_r2),
-              "Val RMSE: {}...".format(val_rmse))
+              "Val RMSE: {}...".format(val_rmse)))
 
 
     #CODE save final val stats for each fold in lists
