@@ -139,7 +139,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             #calculate loss stats
             if step_counter % 20 == 0: #currently lower print rate for testing (turn off for grid search)
-                r2 = r2_score([element.item() for element in target.flatten()], [element.item() for element in output.flatten()])
+                r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()])
                 rmse = np.sqrt(loss.item())
                 maxResidual, minResidual = residuals(output, targets)
                 print("Fold: {}/{}...".format(fold+1, k),
@@ -176,7 +176,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
             val_losses.append(val_loss.item())
 
-            val_r2 = r2_score([element.item() for element in target.flatten()], [element.item() for element in output.flatten()]))
+            val_r2 = r2_score([element.item() for element in targets.flatten()], [element.item() for element in output.flatten()]))
             val_r2s.append(val_r2)
 
             maxResidualVal, minResidualVal = residuals(output, targets)
