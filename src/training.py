@@ -40,13 +40,13 @@ learning_rate = 0.0005
 lin_layers = 3 #hackish
 
 
-def residuals(output, target):
-    target = [element.item() for element in target.flatten()]
+def residuals(output, targets):
+    targets = [element.item() for element in targets.flatten()]
     output = [element.item() for element in output.flatten()]
     differences = []
 
     for i in range(len(output)):
-        difference = output[i] - target[i]
+        difference = output[i] - targets[i]
         differences.append(abs(difference))
 
     return max(differences), min(differences)
