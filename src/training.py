@@ -125,7 +125,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             output, hidden = net(inputs, hidden)
 
             #calculate loss and backwards propogate
-            loss = criterion(output, targets)
+            loss = criterion(output.data[:,-1].squeeze(), targets)
             loss.backward()
 
             #built-in function to help prevent the exploding gradient problem that is common in RNN's
@@ -172,7 +172,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
                 #get output and then calculate loss
                 output, val_hidden = net(inputs, val_hidden)
-                val_loss = criterion(output, targets)
+                val_loss = criterion(output.data[:,-1].squeeze(), targets)
 
                 val_losses.append(val_loss.item())
 
