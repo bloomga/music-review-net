@@ -78,14 +78,14 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
     for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         #initialize model
-        if lin_layers == 1:
-            net = lstmModel1.MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
         if lin_layers == 2:
             net = lstmModel2.MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
         if lin_layers == 3:
             net = lstmModel3.MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
         if lin_layers == 4:
             net = lstmModel4.MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
+        else:
+            net = lstmModel1.MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
 
         #optmizer
         optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
@@ -124,7 +124,8 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                 
                 inputs = inputs.to(device).long()
                 targets = targets.to(device).long()
-                print(targets)
+                
+            
                 #create new hidden state variables
                 hidden = tuple([h.data for h in hidden])
 
@@ -133,7 +134,9 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #get output of music lstm
                 output, hidden = net(inputs, hidden)
-
+                print(output)
+                print(output.detach().numpy())
+                print(output.to_list())
                 #calculate loss and backwards propogate
                 loss = criterion(output, targets)
                 loss.backward()
