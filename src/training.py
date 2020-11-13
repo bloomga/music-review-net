@@ -75,7 +75,7 @@ train_x = np.array(reviews)
 train_y = np.array(scores)
 
 #create k-folds and loop
-k = 10
+k = 5
 kfold = KFold(n_splits=k)
 
 final_val_r2s = list()
