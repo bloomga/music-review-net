@@ -96,7 +96,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     val_fold_y = train_y[val_index]
 
     print("Fold: {}/{}...".format(fold+1, k),
-          "Validation set Std Dev.: {:.6f}...".format(np.std(val_fold_y)))
+        "Validation set Std Dev.: {:.6f}...".format(np.std(val_fold_y)))
     #for GRAPHING part we can print std dev of train fold too
 
     #create tensors and dataloaders

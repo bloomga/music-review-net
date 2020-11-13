@@ -108,7 +108,8 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
         train_fold_y = train_y[train_index]
         val_fold_y = train_y[val_index]
 
-       print("Fold: {}/{}...".format(fold+1, k), "Validation set Std Dev.: {:.6f}...".format(np.std(val_fold_y)))
+        print("Fold: {}/{}...".format(fold+1, k), 
+            "Validation set Std Dev.: {:.6f}...".format(np.std(val_fold_y)))
         #create tensors and dataloaders
        
         train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
