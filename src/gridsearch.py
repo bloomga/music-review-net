@@ -17,9 +17,9 @@ import sys
 
 
 #fname = str(sys.argv[1])
-fname = "metacritic_reviews"
+fname = "p4k_reviews"
 #if we want to use standardized dataset
-standardized = True
+standardized = False
 
 def scale(scores):
     s_min = min(scores)
@@ -221,7 +221,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 
 
-ep_list = [4]
+ep_list = [3]
 lr_list = [0.0005]
 batch_list = [25]
 lin_layer_list = [1, 2, 3, 4]
