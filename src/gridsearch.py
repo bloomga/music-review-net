@@ -77,7 +77,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     train_y = np.array(scores)
 
     #create k-folds and loop
-    k = 
+    k = 5
     kfold = KFold(n_splits=k) 
 
     final_val_r2s = list()
