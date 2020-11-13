@@ -33,9 +33,6 @@ with open("obj/encoded" + fname + 'Preprocessed.json', "r") as fp:
 with open("obj/" + fname + 'PreprocessedDict.json', "r") as fp:
     review_dict = json.load(fp)
 
-print("dataset std deviation: " + str(np.std(scores)))
-print("dataset mean: " + str(np.mean(scores)))
-
 #set hyperparameters
 #using basic hyperparameters for now, these will be optimized later
 vocab_size = len(review_dict)+1 # +1 accounts for the 0 padding "word"
@@ -83,7 +80,6 @@ final_val_losses = list()
 final_val_rmses = list()
 
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
-    print("Fold: {}/{}...".format(fold+1, k))
     #initialize model
     net = MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
 
@@ -98,6 +94,10 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     val_fold_x = train_x[val_index]
     train_fold_y = train_y[train_index]
     val_fold_y = train_y[val_index]
+
+    print("Fold: {}/{}...".format(fold+1, k),
+          "Validation set Std Dev.: {:.6f}...".format(np.std(val_fold_y)))
+    #for GRAPHING part we can print std dev of train fold too
 
     #create tensors and dataloaders
     batch_size = 25
@@ -229,8 +229,8 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 print("Final validation stats after cross validation is done")
 print("Learning Rate: {:.6f}...".format(learning_rate))
 print("Number of Epochs: {:.6f}...".format(epochs))
-print("Batch size: {:.6f}}...".format(batch_size))
-print("Number of LSTM Layers: {:.6f}}...".format(num_rec_layers))
+print("Batch size: {:.6f}...".format(batch_size))
+print("Number of LSTM Layers: {:.6f}...".format(num_rec_layers))
 print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
 print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
 print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))

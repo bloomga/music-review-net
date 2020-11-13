@@ -17,7 +17,7 @@ import sys
 
 
 #fname = str(sys.argv[1])
-fname = "p4k_reviews"
+fname = "metacritic_reviews"
 #if we want to use standardized dataset
 standardized = False
 
@@ -85,7 +85,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     final_val_rmses = list()
 
     for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
-        print("Fold: {}/{}...".format(fold+1, k))
+    
         #initialize model
         if lin_layers == 2:
             net = lstmModel2.MusicLSTM(vocab_size, output_size, input_size, hidden_size, num_rec_layers, dropout)
@@ -107,7 +107,9 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
         val_fold_x = train_x[val_index]
         train_fold_y = train_y[train_index]
         val_fold_y = train_y[val_index]
-   
+
+       print("Fold: {}/{}...".format(fold+1, k),
+             "Validation set Std Dev.: {:.6f}...".format(np.std(val_fold_y)))
         #create tensors and dataloaders
        
         train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
@@ -212,8 +214,8 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     print("Final validation stats after cross validation is done")
     print("Learning Rate: {:.6f}...".format(learning_rate))
     print("Number of Epochs: {:.6f}...".format(epochs))
-    print("Batch size: {:.6f}}...".format(batch_size))
-    print("Number of LSTM Layers: {:.6f}}...".format(num_rec_layers))
+    print("Batch size: {:.6f}...".format(batch_size))
+    print("Number of LSTM Layers: {:.6f}...".format(num_rec_layers))
     print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
     print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
     print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
