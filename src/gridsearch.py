@@ -1,4 +1,4 @@
-import lstmModel as lstmModel3
+import lstmModel3layers as lstmModel3
 import lstmModel1layers as lstmModel1
 import lstmModel2layers as lstmModel2
 import lstmModel4layers as lstmModel4
@@ -82,8 +82,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
     final_val_r2s = list()
     final_val_losses = list()
-    final_val_rmses = list()
-
+    
     for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     
         #initialize model
@@ -172,7 +171,6 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
             val_hidden = net.init_hidden_state(batch_size, train_on_gpu)
             val_losses = list()
             val_r2s = list()
-            val_rmses = list()
 
             with torch.no_grad():
                 net.eval() #put net in eval mode so it doesnt learn from the validation data
@@ -193,12 +191,9 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                     val_r2 = r2_score(targets.tolist(), output.tolist())
                     val_r2s.append(val_r2)
 
-                    val_rmse = np.sqrt(val_loss.item())
-                    val_rmses.append(val_rmse)
-
                 val_loss = np.mean(val_losses)
                 val_r2 = np.mean(val_r2s)
-                val_rmse = np.mean(val_rmses)
+                val_rmse = np.sqrt(val_loss)
                 net.train() #set back to training mode
                 
                 print("Epoch: {}/{}...".format(e+1, epochs),
@@ -208,7 +203,6 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
         
         final_val_losses.append(val_loss)
         final_val_r2s.append(val_r2)
-        final_val_rmses.append(val_rmse)
 
     #print out final validation stats (averages over cross validation)
     print("Final validation stats after cross validation is done")
@@ -219,15 +213,15 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
     print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
     print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
-    print("Val RMSE: {:.6f}...".format(np.mean(final_val_rmses)))
+    print("Val RMSE: {:.6f}...".format(np.sqrt(np.mean(final_val_losses))))
     print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 
 
-ep_list = [3]
-lr_list = [0.0005]
-batch_list = [25]
-lin_layer_list = [1, 2, 3, 4]
-lstm_layer_list = [1, 2, 3]
+ep_list = [3, 9, 27]
+lr_list = [0.0001, 0.0005, 0.001, 0.005]
+batch_list = [10, 30, 50, 70, 90]
+lin_layer_list = [2]
+lstm_layer_list = [2]
 #gridsearching
 for eps in ep_list:
     for learn_rate in lr_list:
