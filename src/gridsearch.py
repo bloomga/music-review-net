@@ -54,7 +54,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     dropout = 0.5
     learning_rate = learn_rate
     lin_layers = num_lin_layers
-    batch_size = 25
+    batch_size = batch
     epochs = eps 
     
     print("Learning Rate: {:.6f}...".format(learning_rate))
