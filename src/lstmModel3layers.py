@@ -22,8 +22,11 @@ class MusicLSTM(nn.Module):
 
         #fully connected linear layers
         self.fc1 = nn.Linear(hidden_size, 64)
-        self.fc2 = nn.Linear(64, output_size)
+        self.fc2 = nn.Linear(64, 16)
+        self.fc3 = nn.Linear(16, output_size)
 
+        #final ReLU layer (we dont need values less than 0)
+        #self.relu = nn.ReLU()
 
 
     #feeds forward some input x and hidden state through the model to produce an output
@@ -45,6 +48,11 @@ class MusicLSTM(nn.Module):
         out = self.fc1(out)
         out = self.dropout(out)
         out = self.fc2(out)
+        out = self.dropout(out)
+        out = self.fc3(out)
+
+        #relu layer
+        #out = self.relu(out)
 
         return out, hidden
 

@@ -77,7 +77,6 @@ kfold = KFold(n_splits=k)
 
 final_val_r2s = list()
 final_val_losses = list()
-final_val_rmses = list()
 
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     #initialize model
@@ -167,7 +166,6 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
         val_hidden = net.init_hidden_state(batch_size, train_on_gpu)
         val_losses = list()
         val_r2s = list()
-        val_rmses = list()
         maxFinal = 0
         minFinal = 10
 
@@ -202,12 +200,11 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
 
 
-                val_rmse = np.sqrt(val_loss.item())
-                val_rmses.append(val_rmse)
+                
 
             val_r2 = np.mean(val_r2s)
-            val_rmse = np.mean(val_rmses)
             val_loss = np.mean(val_losses)
+            val_rmse = np.sqrt(val_loss)
             net.train() #set back to training mode
             #CODE find largest and smallest (absolute value) residual from all outputs vs targets
             #CODE printing these
@@ -223,7 +220,6 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
     #CODE save final val stats for each fold in lists
     final_val_losses.append(val_loss)
     final_val_r2s.append(val_r2)
-    final_val_rmses.append(val_rmse)
 
 #print out final validation stats (averages over cross validation)
 print("Final validation stats after cross validation is done")
@@ -234,7 +230,7 @@ print("Number of LSTM Layers: {:.6f}...".format(num_rec_layers))
 print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
 print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
 print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
-print("Val RMSE: {:.6f}...".format(np.mean(final_val_rmses)))
+print("Val RMSE: {:.6f}...".format(np.sqrt(np.mean(final_val_losses))))
 print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 
 
