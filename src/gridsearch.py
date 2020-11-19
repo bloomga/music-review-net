@@ -217,7 +217,7 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 
 
-ep_list = [3, 9, 27]
+ep_list = [27]
 lr_list = [0.0001, 0.0005, 0.001, 0.005]
 batch_list = [10, 30, 50, 70, 90]
 lin_layer_list = [2]
