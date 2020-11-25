@@ -217,15 +217,20 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 
 
-ep_list = [3, 9, 27]
-lr_list = [0.0001, 0.0005, 0.001, 0.005]
+ep_list = [9]
+lr_list = [0.0005, 0.001, 0.005]
 batch_list = [10, 30, 50, 70, 90]
 lin_layer_list = [2]
 lstm_layer_list = [2]
 #gridsearching
 for eps in ep_list:
     for learn_rate in lr_list:
-        for batch in batch_list:
+        if learn_rate == 0.0005:
             for num_lin_layers in lin_layer_list:
                 for rec_layers in lstm_layer_list:
-                    train(num_lin_layers, rec_layers, learn_rate, batch, eps)
+                    train(num_lin_layers, rec_layers, learn_rate, 90, eps)
+        else:
+            for batch in batch_list:
+                for num_lin_layers in lin_layer_list:
+                    for rec_layers in lstm_layer_list:
+                        train(num_lin_layers, rec_layers, learn_rate, batch, eps)
