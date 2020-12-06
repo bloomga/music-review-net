@@ -6,12 +6,11 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
-from sklearn.metrics import r2_score
 import sys
 
 
 #fname = str(sys.argv[1])
-fname = "p4k_reviews"
+fname = "metacritic_reviews"
 #if we want to use standardized dataset or not
 standardized = False
 
@@ -41,8 +40,10 @@ input_size = 400
 hidden_size = 256
 num_rec_layers = 2
 dropout = 0.5
-learning_rate = 0.0005 #0.0005
-lin_layers = 3 #hackish
+learning_rate = 0.001
+batch_size = 10
+epochs = 9
+lin_layers = 2 #hackish but easier than reading number of layers from model
 
 
 def residuals(output, targets):
@@ -75,7 +76,6 @@ train_y = np.array(scores)
 k = 5
 kfold = KFold(n_splits=k)
 
-final_val_r2s = list()
 final_val_losses = list()
 
 for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
@@ -96,19 +96,25 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
     print("Fold: {}/{}...".format(fold+1, k),
         "Validation set Std Dev.: {:.6f}...".format(np.std(val_fold_y)))
-    #for GRAPHING part we can print std dev of train fold too
 
     #create tensors and dataloaders
-    batch_size = 25
     train = TensorDataset(torch.FloatTensor(train_fold_x), torch.FloatTensor(train_fold_y))
     validate = TensorDataset(torch.FloatTensor(val_fold_x), torch.FloatTensor(val_fold_y))
     train_loader = DataLoader(train, batch_size = batch_size, shuffle = True, drop_last = True)
     val_loader = DataLoader(validate, batch_size = batch_size, shuffle = True, drop_last = True)
 
-    
-    epochs = 4 #we will adjust this after training, see how many epochs before loss stops decreasing
     step_counter = 0
 
+    printed_train_losses = list()
+    printed_train_maxes = list()
+    printed_train_mins = list()
+    printed_train_epochs = list()
+    printed_train_steps = list()
+    printed_val_losses = list()
+    printed_val_maxes = list()
+    printed_val_mins = list()
+    
+    
     #epoch loop
     for e in range(epochs):
         print("Epoch: {}/{}...".format(e+1, epochs))
@@ -145,27 +151,30 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
 
             #calculate loss stats
-            if step_counter % 50 == 0: #currently lower print rate for testing (turn off for grid search)
-                r2 = r2_score(targets.tolist(), output.tolist())
+            if step_counter % 25 == 0: #currently lower print rate for testing (turn off for grid search)
                 rmse = np.sqrt(loss.item())
                 maxResidual, minResidual = residuals(output, targets)
                 print("Fold: {}/{}...".format(fold+1, k),
                       "Epoch: {}/{}...".format(e+1, epochs),
                       "Step: {}...".format(step_counter),
                       "Loss: {:.6f}...".format(loss.item()),
-                      "R^2: {:.6f}...".format(r2),
                       "RMSE: {:.6f}...".format(rmse),
                       "Max Residual: {:.6f}...".format(maxResidual),
                       "Min Residual: {:.6f}...".format(minResidual))
 
-                #for graphing later
-                #CODE save these all in a list of lists for the last fold along with epoch/step/and/loss
+                if(fold + 1 == 2):
+                    printed_train_losses.append(loss.item())
+                    printed_train_rmses.append(rmse)
+                    printed_train_maxes.append(maxResidual)
+                    printed_train_mins.append(minResidual)
+                    printed_train_steps.append(step_counter)
+                    printed_train_epochs.append(epoch)
+
 
         #calculate validation loss
         #first init a new zeroed hidden state
         val_hidden = net.init_hidden_state(batch_size, train_on_gpu)
         val_losses = list()
-        val_r2s = list()
         maxFinal = 0
         minFinal = 10
 
@@ -186,9 +195,6 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
                 val_losses.append(val_loss.item())
 
-                val_r2 = r2_score(targets.tolist(), output.tolist())
-                val_r2s.append(val_r2)
-
                 maxResidualVal, minResidualVal = residuals(output, targets)
 
                 if minFinal > minResidualVal:
@@ -196,30 +202,48 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
                 elif maxFinal< maxResidualVal:
                     maxFinal = maxResidualVal
-
-
-
-
                 
 
-            val_r2 = np.mean(val_r2s)
             val_loss = np.mean(val_losses)
             val_rmse = np.sqrt(val_loss)
             net.train() #set back to training mode
-            #CODE find largest and smallest (absolute value) residual from all outputs vs targets
-            #CODE printing these
 
             print("Epoch: {}/{}...".format(e+1, epochs),
                   "Val Loss: {:.6f}...".format(val_loss),
-                  "Val R^2: {}...".format(val_r2),
                   "Val RMSE: {}...".format(val_rmse),
                   "Max Val Residual: {:.6f}...".format(maxFinal),
                   "Min Val Residual: {:.6f}...".format(minFinal))
 
+            if(fold + 1 == 2):
+                printed_val_losses.append(val_loss)
+                printed_val_maxes.append(maxFinal)
+                printed_val_mins.append(minFinal)
 
-    #CODE save final val stats for each fold in lists
+    #dump val losses, val rmses, and residues for "zoom in" on fold       
+    if(fold + 1 == 2):
+        printed_val_rmses = [sqrt(x) for x in printed_val_losses]
+        with open("obj/" + fname + "ValLosses.json", "w") as fp:
+            json.dump(printed_val_losses, fp)
+        with open("obj/" + fname + "ValRMSEs.json", "w") as fp:
+            json.dump(printed_val_losses, fp)
+        with open("obj/" + fname + "ValMaxRes.json", "w") as fp:
+            json.dump(printed_val_maxes, fp)
+         with open("obj/" + fname + "ValMinRes.json", "w") as fp:
+            json.dump(printed_val_mins, fp)
+        with open("obj/" + fname + "TrainLosses.json", "w") as fp:
+            json.dump(printed_train_losses, fp)
+        with open("obj/" + fname + "TrainRMSEs.json", "w") as fp:
+            json.dump(printed_train_losses, fp)
+        with open("obj/" + fname + "TrainMaxRes.json", "w") as fp:
+            json.dump(printed_train_maxes, fp)
+        with open("obj/" + fname + "TrainMinRes.json", "w") as fp:
+            json.dump(printed_train_mins, fp)
+        with open("obj/" + fname + "TrainBatchSteps.json", "w") as fp:
+            json.dump(printed_train_steps, fp)
+        with open("obj/" + fname + "TrainEpochs.json", "w") as fp:
+            json.dump(printed_train_epochs, fp)
+            
     final_val_losses.append(val_loss)
-    final_val_r2s.append(val_r2)
 
 #print out final validation stats (averages over cross validation)
 print("Final validation stats after cross validation is done")
@@ -229,16 +253,7 @@ print("Batch size: {:.6f}...".format(batch_size))
 print("Number of LSTM Layers: {:.6f}...".format(num_rec_layers))
 print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
 print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
-print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
 print("Val RMSE: {:.6f}...".format(np.sqrt(np.mean(final_val_losses))))
 print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 
 
-#after we finish tuning
-#graphs for later (think zooming in on 1 fold)
-#CODE graph training Loss, training r^2, and min/max residuals vs step (annotated by epoch)
-#for a singular fold and its accompanying model
-#CODE graph  Val Loss, val RMSE, val r^2, and min/max residuals vs epoch for a singular
-#fold and its accompanying model
-#CODE graph scatter plot of some outputs and targets together
-#do this for validation in a singular fold

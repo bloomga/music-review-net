@@ -9,11 +9,7 @@ import json
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import KFold
-from sklearn.metrics import r2_score
 import sys
-
-#CODE make this all into a function that accepts hyper-parameter settings 
-#and loops over all options. put in new file called grid search.
 
 
 #fname = str(sys.argv[1])
@@ -80,7 +76,6 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     k = 5
     kfold = KFold(n_splits=k) 
 
-    final_val_r2s = list()
     final_val_losses = list()
     
     for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
@@ -156,13 +151,11 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
 
                 #calculate loss stats
                 if(False and step_counter % 20 == 0): #turned off training prining for gridsearch
-                    r2 = r2_score(targets.tolist(), output.tolist())
                     rmse = np.sqrt(loss.item())
                     print("Fold: {}/{}...".format(fold+1, k), 
                           "Epoch: {}/{}...".format(e+1, epochs),
                           "Step: {}...".format(step_counter),
                           "Loss: {:.6f}...".format(loss.item()),
-                          "R^2: {}...".format(r2),
                           "RMSE: {}...".format(rmse))
 
                     
@@ -188,21 +181,16 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
                     val_loss = criterion(output, targets)
                     val_losses.append(val_loss.item())
 
-                    val_r2 = r2_score(targets.tolist(), output.tolist())
-                    val_r2s.append(val_r2)
 
                 val_loss = np.mean(val_losses)
-                val_r2 = np.mean(val_r2s)
                 val_rmse = np.sqrt(val_loss)
                 net.train() #set back to training mode
                 
                 print("Epoch: {}/{}...".format(e+1, epochs),
                       "Val Loss: {:.6f}...".format(val_loss),
-                      "Val R^2: {}...".format(val_r2),
                       "Val RMSE: {}...".format(val_rmse))
         
         final_val_losses.append(val_loss)
-        final_val_r2s.append(val_r2)
 
     #print out final validation stats (averages over cross validation)
     print("Final validation stats after cross validation is done")
@@ -212,7 +200,6 @@ def train(num_lin_layers, rec_layers, learn_rate, batch, eps):
     print("Number of LSTM Layers: {:.6f}...".format(num_rec_layers))
     print("Number of Linear/Dense Layers: {:.6f}...".format(lin_layers))
     print("Val Loss: {:.6f}...".format(np.mean(final_val_losses)))
-    print("Val R^2: {:.6f}...".format(np.mean(final_val_r2s)))
     print("Val RMSE: {:.6f}...".format(np.sqrt(np.mean(final_val_losses))))
     print("Standard Error: {:.6f}".format((np.std(final_val_losses))/(np.sqrt(k))))
 
