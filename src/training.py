@@ -170,7 +170,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
                         printed_train_maxes.append(maxResidual)
                         printed_train_mins.append(minResidual)
                         printed_train_steps.append(step_counter)
-                        printed_train_epochs.append(epoch)
+                        printed_train_epochs.append(e+1)
 
 
             #calculate validation loss
