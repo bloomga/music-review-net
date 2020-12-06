@@ -228,7 +228,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
             json.dump(printed_val_losses, fp)
         with open("obj/" + fname + "ValMaxRes.json", "w") as fp:
             json.dump(printed_val_maxes, fp)
-         with open("obj/" + fname + "ValMinRes.json", "w") as fp:
+        with open("obj/" + fname + "ValMinRes.json", "w") as fp:
             json.dump(printed_val_mins, fp)
         with open("obj/" + fname + "TrainLosses.json", "w") as fp:
             json.dump(printed_train_losses, fp)
