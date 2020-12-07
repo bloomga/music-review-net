@@ -223,7 +223,7 @@ for fold, (train_index, val_index) in enumerate(kfold.split(train_x, train_y)):
 
         #dump val losses, val rmses, and residues for "zoom in" on fold       
         if(fold + 1 == 2):
-            printed_val_rmses = [sqrt(x) for x in printed_val_losses]
+            printed_val_rmses = [np.sqrt(x) for x in printed_val_losses]
             with open("obj/" + fname + "ValLosses.json", "w") as fp:
                 json.dump(printed_val_losses, fp)
             with open("obj/" + fname + "ValRMSEs.json", "w") as fp:
